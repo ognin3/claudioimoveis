@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Tokens — Claudio Corretor
+   Direcao: confianca + calor. Os renders das construtoras (Cury, JV, Direcional)
+   ja sao coloridos e saturados; a interface fica sobria de proposito para que a
+   imagem do imovel seja o elemento mais forte da tela.
+   Dark mode nao e prioridade — ver CLAUDE.md secao 4.
+--------------------------------------------------------------------------- */
+
+@theme {
+  /* Marca — petroleo profundo. Fundo de header, footer e superficies de destaque. */
+  --color-brand-50: #f0f6f8;
+  --color-brand-100: #d9e9ee;
+  --color-brand-200: #b4d3dd;
+  --color-brand-300: #83b5c5;
+  --color-brand-400: #4d8fa5;
+  --color-brand-500: #2f7086;
+  --color-brand-600: #265b6e;
+  --color-brand-700: #21495a;
+  --color-brand-800: #1c3b49;
+  --color-brand-900: #142b36;
+  --color-brand-950: #0b1a21;
+
+  /* Acento — ambar quente. Reservado para CTA e destaques. Usar com parcimonia. */
+  --color-accent-50: #fdf7ed;
+  --color-accent-100: #f8e8cc;
+  --color-accent-200: #f0cf95;
+  --color-accent-300: #e7b25e;
+  --color-accent-400: #dd9838;
+  --color-accent-500: #c8873a;
+  --color-accent-600: #a86a26;
+  --color-accent-700: #874f22;
+  --color-accent-800: #6f4022;
+  --color-accent-900: #5d361f;
+
+  /* Neutros quentes — cinza puro deixa imobiliario com cara de planilha. */
+  --color-sand-50: #faf9f7;
+  --color-sand-100: #f2f0ec;
+  --color-sand-200: #e6e2db;
+  --color-sand-300: #d3cdc2;
+  --color-sand-400: #b0a898;
+  --color-sand-500: #8b8273;
+  --color-sand-600: #6e6659;
+  --color-sand-700: #575146;
+  --color-sand-800: #3d3831;
+  --color-sand-900: #262220;
+
+  /* Status do imovel — mesmas cores no card, no filtro e no badge. */
+  --color-status-lancamento: #1f7a4d;
+  --color-status-obras: #b45309;
+  --color-status-pronto: #26647d;
+
+  /* Verde oficial do WhatsApp. So em affordance de WhatsApp, nunca decorativo. */
+  --color-whatsapp: #25d366;
+  --color-whatsapp-dark: #1da851;
+
+  /* Tipografia — variaveis preenchidas pelo next/font no layout raiz. */
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  /* Escala fluida: acompanha a viewport sem media query e sem estourar no mobile. */
+  --text-display: clamp(2.25rem, 1.6rem + 3.2vw, 4.5rem);
+  --text-h1: clamp(1.875rem, 1.45rem + 2.1vw, 3rem);
+  --text-h2: clamp(1.5rem, 1.25rem + 1.25vw, 2.25rem);
+  --text-h3: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+
+  --radius-card: 1rem;
+  --radius-pill: 999px;
+
+  /* Sombras suaves e quentes — sombra neutra "suja" o fundo areia. */
+  --shadow-card: 0 1px 2px rgb(38 34 32 / 0.04), 0 8px 24px -8px rgb(38 34 32 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(38 34 32 / 0.06), 0 16px 40px -12px rgb(38 34 32 / 0.18);
+
+  /* Altura da barra de filtros sticky — usada tambem no scroll-margin das ancoras. */
+  --spacing-filtros: 4.5rem;
+}
+
+@layer base {
+  html {
+    /* Ancoras nao ficam escondidas atras do header + barra de filtros sticky. */
+    scroll-padding-top: calc(var(--spacing-filtros) + 1rem);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-sand-50);
+    color: var(--color-sand-900);
+    font-family: var(--font-sans);
+    /* Evita scroll horizontal por causa de galeria e carrossel. */
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Foco visivel e consistente — meta de acessibilidade 100 no Lighthouse. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Imagem nunca estoura o container nem gera layout shift. */
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Respeitar quem pediu menos movimento. Vale para todo o ScrollReveal da Fase 2. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

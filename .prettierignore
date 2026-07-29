@@ -1,0 +1,6 @@
+.next
+node_modules
+public
+docs/inventario-imoveis.csv
+docs/selecao-corretor.json
+package-lock.json
