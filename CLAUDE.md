@@ -206,6 +206,31 @@ funcionando. **Registrar domínio antes de ligar verba de verdade.**
 
 ---
 
+### 5.8 Animação de saída em overlay Radix trava a página — não usar
+
+O `Presence` do Radix só desmonta o nó **depois do `animationend`**. Se a animação não
+progride, o dialog fecha visualmente mas **continua montado, com o overlay bloqueando
+cliques na página inteira**. Reproduzido aqui: animação `running` presa em `currentTime: 0`,
+nó preso em `data-state="closed"`, overlays empilhando a cada abertura.
+
+Acontece quando a página não compõe frames (aba em segundo plano, janela oculta) e é
+agravado pelo reset de `prefers-reduced-motion`, que zera a duração via `!important`.
+
+Regras que valem para todo overlay do projeto:
+
+1. **Nenhuma animação de saída** (`data-[state=closed]:animate-*`). Sem ela, `animationName`
+   é `none` no fechamento e o Radix desmonta na hora.
+2. **Animação de entrada sempre com `motion-safe:`**. Sem isso, uma entrada que parte de
+   `translateY(100%)` ou `opacity: 0` deixa o conteúdo fora da tela / invisível se travar.
+3. Não usar `requestAnimationFrame` para estado visível de UI (dots de carrossel, contador
+   de leitor de tela): rAF é estrangulado em aba oculta e o indicador congela.
+
+### 5.9 Alvo de toque: 44px, com uma exceção documentada
+
+Todo controle tem no mínimo 44px. A única exceção é o **X de remover chip de filtro**
+(28px) — um X de 44px ficaria maior que o chip. Atende o mínimo de 24px do WCAG 2.5.8 e
+nunca é o único caminho: existe sempre um "Limpar filtros" ao lado.
+
 ## 5.7 Compliance (não remover)
 
 - CRECI 103666 visível no rodapé de toda página.
