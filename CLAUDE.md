@@ -64,8 +64,9 @@ O que já foi apurado e vale como decisão:
 - **Cache Components está ligado** (`cacheComponents: true` em `next.config.ts`).
   O modelo é `use cache` + `cacheLife()` + `cacheTag()`, com **PPR por padrão**.
   Isso substitui o plano original de ISR/`revalidatePath`.
-- Toda query do Sanity leva `'use cache'` + `cacheTag('imovel', ...)`; o webhook do Studio
-  chama **`updateTag`**, não `revalidatePath`.
+- Toda query do Sanity leva `'use cache'` + `cacheTag(...)`. O webhook do Studio cai num
+  **Route Handler**, e ali o certo é **`revalidateTag`** — `updateTag` só funciona dentro de
+  Server Action e lançaria erro. `revalidatePath` não se usa: tag é mais preciso.
 - Qualquer componente que leia `cookies`, `headers`, `searchParams` ou `params` sem
   `generateStaticParams` **precisa** estar dentro de `<Suspense>`, senão o build quebra com
   `Uncached data was accessed outside of <Suspense>`.
@@ -230,6 +231,27 @@ Regras que valem para todo overlay do projeto:
 Todo controle tem no mínimo 44px. A única exceção é o **X de remover chip de filtro**
 (28px) — um X de 44px ficaria maior que o chip. Atende o mínimo de 24px do WCAG 2.5.8 e
 nunca é o único caminho: existe sempre um "Limpar filtros" ao lado.
+
+### 5.10 O Studio precisa ficar fora do grafo do servidor
+
+Duas armadilhas encontradas ao montar `/studio`. Não "simplifique" o arranjo atual:
+
+**a) `sanity.config.ts` não pode ser importado por Server Component.**
+O padrão da doc do next-sanity usa uma página server. Aqui o build morre com
+`Export default doesn't exist in target module`: o pacote `sanity` resolve pela condição
+`react-server` e puxa `swr/dist/index/react-server.mjs`, que não tem export default.
+Por isso `src/app/studio/[[...tool]]/page.tsx` é **`"use client"`** — assim o config só
+existe no grafo do navegador.
+
+**b) Metadata da rota mora em `src/app/studio/layout.tsx`,** porque client component não
+exporta `metadata`/`viewport`. E os valores são **reescritos à mão** em vez de
+`export { metadata } from "next-sanity/studio"` — reexportar traria o bundle do Studio de
+volta ao servidor e recriaria o problema (a).
+
+**c) O layout tem um marcador dinâmico (`connection()` dentro de `<Suspense>`).**
+Com Cache Components, o `params` de rota catch-all conta como dado de request; sem o
+marcador o build falha com `next-prerender-dynamic-metadata`. Renderizar por request é o
+certo para um painel: é SPA, sem SEO, com um usuário só.
 
 ## 5.7 Compliance (não remover)
 
