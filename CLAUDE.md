@@ -253,6 +253,14 @@ Com Cache Components, o `params` de rota catch-all conta como dado de request; s
 marcador o build falha com `next-prerender-dynamic-metadata`. Renderizar por request é o
 certo para um painel: é SPA, sem SEO, com um usuário só.
 
+### 5.11 Nunca gravar `.env.local` com `Set-Content -Encoding UTF8`
+
+O PowerShell 5.1 escreve **BOM**, e o BOM vira parte do nome da primeira variável —
+`﻿NEXT_PUBLIC_SANITY_PROJECT_ID`. O `--env-file` do Node lê e a variável simplesmente
+não existe, com erro que aponta para o lugar errado. Já aconteceu uma vez aqui.
+Para editar arquivo de env por script, use `[System.IO.File]::WriteAllText` com
+`UTF8Encoding($false)`, ou o Write tool.
+
 ## 5.7 Compliance (não remover)
 
 - CRECI 103666 visível no rodapé de toda página.
