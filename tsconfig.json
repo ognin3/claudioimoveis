@@ -6,6 +6,10 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
+    // Os scripts em scripts/ rodam direto no Node 24, que EXIGE a extensao no
+    // import (`./lib/normalizar.mts`). Sem isto o tsc reclama. Seguro porque
+    // nada aqui e emitido — o Next compila so o que esta em src/.
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",

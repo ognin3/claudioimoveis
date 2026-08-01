@@ -125,7 +125,7 @@ export default async function PaginaImovel({
           {imovel.tipologias.length > 0 && (
             <section className="mt-12">
               <h2 className="text-noite-50 text-[length:var(--text-h3)] font-semibold">
-                Plantas disponíveis
+                Opções de apartamento
               </h2>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 {imovel.tipologias.map((t) => (
@@ -153,6 +153,42 @@ export default async function PaginaImovel({
                   </div>
                 ))}
               </div>
+            </section>
+          )}
+
+          {/* Plantas que o scrape trouxe sem indicar a qual tipologia pertencem.
+              Ficam numa galeria propria ate alguem identificar no Studio. */}
+          {imovel.plantas && imovel.plantas.length > 0 && (
+            <section className="mt-12">
+              <h2 className="text-noite-50 text-[length:var(--text-h3)] font-semibold">
+                Plantas
+              </h2>
+              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {imovel.plantas.map((p, i) => (
+                  <div
+                    key={p.url}
+                    className="border-noite-800 bg-noite-950 relative aspect-[4/3] overflow-hidden rounded-lg border"
+                  >
+                    <Image
+                      src={p.url}
+                      alt={p.alt ?? `${imovel.nome} — planta ${i + 1}`}
+                      fill
+                      sizes="(min-width: 640px) 33vw, 50vw"
+                      placeholder={p.lqip ? "blur" : "empty"}
+                      blurDataURL={p.lqip ?? undefined}
+                      className="object-contain"
+                    />
+                    {p.rotulo && (
+                      <span className="absolute inset-x-0 bottom-0 bg-black/70 px-2 py-1 text-center font-sans text-xs text-white">
+                        {p.rotulo}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p className="text-noite-500 mt-2 font-sans text-xs">
+                Imagens meramente ilustrativas. Medidas sujeitas a alteração.
+              </p>
             </section>
           )}
 

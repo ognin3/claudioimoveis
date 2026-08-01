@@ -195,12 +195,39 @@ export const imovel = defineType({
     }),
     defineField({
       name: "tipologias",
-      title: "Plantas e tipologias",
+      title: "Tipologias",
       type: "array",
       group: "midia",
       of: [defineArrayMember({ type: "tipologia" })],
-      description: "É daqui que sai o filtro de quartos do catálogo.",
+      description:
+        "Uma por opção de apartamento. É daqui que sai o filtro de quartos do catálogo.",
       validation: (regra) => regra.min(1).error("Cadastre ao menos uma tipologia."),
+    }),
+    defineField({
+      name: "plantas",
+      title: "Plantas avulsas",
+      type: "array",
+      group: "midia",
+      of: [
+        defineArrayMember({
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({ name: "alt", title: "Descrição da imagem", type: "string" }),
+            defineField({
+              name: "rotulo",
+              title: "Rótulo",
+              type: "string",
+              description: 'Ex.: "2 quartos — 45 m²". Opcional.',
+            }),
+          ],
+        }),
+      ],
+      options: { layout: "grid" },
+      description:
+        "Plantas que ainda não foram ligadas a uma tipologia. O material da Cury vem " +
+        "assim: as imagens existem, mas sem indicar a qual planta cada uma pertence. " +
+        "Ao identificar, mova a imagem para dentro da tipologia correspondente.",
     }),
     defineField({
       name: "video",

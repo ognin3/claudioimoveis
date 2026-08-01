@@ -96,6 +96,8 @@ export type ImovelCompleto = CardImovel & {
   video: string | null;
   fichaTecnica: FichaTecnica | null;
   galeria: ImagemSanity[] | null;
+  /** Plantas que ainda nao foram vinculadas a uma tipologia — ver schema. */
+  plantas: Array<ImagemSanity & { rotulo: string | null }> | null;
   tipologias: Tipologia[];
   seo: {
     titulo: string | null;

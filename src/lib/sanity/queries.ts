@@ -61,6 +61,7 @@ export const queryImovel = defineQuery(/* groq */ `
     video,
     fichaTecnica,
     "galeria": galeria[] ${camposImagem},
+    "plantas": plantas[] { ${camposImagem.slice(1, -1)}, rotulo },
     "tipologias": tipologias[] {
       rotulo, quartos, areaPrivativa, suites, vagas,
       "planta": planta ${camposImagem}

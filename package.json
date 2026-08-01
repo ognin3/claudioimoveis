@@ -11,7 +11,10 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "seed": "node --env-file=.env.local scripts/seed-base.mts",
-    "exemplo": "node --env-file=.env.local scripts/exemplo-conceito-california.mts"
+    "exemplo": "node --env-file=.env.local scripts/exemplo-conceito-california.mts",
+    "pipeline:normalizar": "node scripts/01-normalizar.mts",
+    "pipeline:imagens": "node scripts/02-otimizar-imagens.mts",
+    "pipeline:importar": "node --env-file=.env.local scripts/03-importar-sanity.mts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.23",
