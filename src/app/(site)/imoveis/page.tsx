@@ -33,14 +33,21 @@ export default async function PaginaImoveis() {
   );
 }
 
+/** Espelha o layout real (sidebar + grade) para nao haver salto ao hidratar. */
 function EsqueletoCatalogo() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <div className="bg-noite-800/70 h-9 w-64 animate-pulse rounded-lg" />
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <SkeletonCardImovel key={i} />
-        ))}
+    <div className="mx-auto max-w-[88rem] px-4 py-8 sm:px-6">
+      <div className="bg-noite-800/70 h-4 w-32 animate-pulse rounded" />
+      <div className="mt-6 lg:grid lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-10">
+        <div className="border-noite-800 bg-noite-900 hidden h-[32rem] animate-pulse rounded-[length:var(--radius-card)] border lg:block" />
+        <div>
+          <div className="bg-noite-800/70 h-8 w-72 animate-pulse rounded-lg" />
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <SkeletonCardImovel key={i} />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

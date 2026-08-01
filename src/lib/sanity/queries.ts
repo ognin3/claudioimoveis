@@ -29,6 +29,8 @@ const camposCard = /* groq */ `
   "quartos": array::unique(tipologias[].quartos),
   "areaMin": math::min(tipologias[].areaPrivativa),
   "areaMax": math::max(tipologias[].areaPrivativa),
+  "vagasMax": math::max(tipologias[].vagas),
+  "totalFotos": count(galeria),
   "capa": capa ${camposImagem}
 `;
 

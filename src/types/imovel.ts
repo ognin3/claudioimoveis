@@ -51,6 +51,9 @@ export type CardImovel = {
   quartos: number[];
   areaMin: number | null;
   areaMax: number | null;
+  vagasMax: number | null;
+  /** Quantas fotos a galeria tem — vira o selo de contagem sobre a capa. */
+  totalFotos: number | null;
   capa: ImagemSanity;
 };
 

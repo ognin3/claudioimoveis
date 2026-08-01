@@ -39,15 +39,47 @@ export function lerFiltros(params: URLSearchParams): Filtros {
   };
 }
 
-/** Devolve a query string canonica; vazia quando nao ha filtro. */
-export function escreverFiltros(filtros: Filtros): string {
+export type Ordenacao = "destaque" | "lancamento" | "az";
+
+/**
+ * Devolve a query string canonica; vazia quando nao ha filtro nem ordem custom.
+ * "destaque" e o padrao e nao vai para a URL — link de anuncio fica mais limpo.
+ */
+export function escreverFiltros(filtros: Filtros, ordem: Ordenacao = "destaque"): string {
   const params = new URLSearchParams();
   if (filtros.regiao.length) params.set("regiao", filtros.regiao.join(","));
   if (filtros.quartos.length) params.set("quartos", filtros.quartos.join(","));
   if (filtros.status.length) params.set("status", filtros.status.join(","));
   if (filtros.construtora.length)
     params.set("construtora", filtros.construtora.join(","));
+  if (ordem !== "destaque") params.set("ordem", ordem);
   return params.toString();
+}
+
+/** Peso do status quando a pessoa pede "lancamentos primeiro". */
+const PESO_STATUS: Record<string, number> = { lancamento: 0, obras: 1, pronto: 2 };
+
+export function ordenar<T extends CardImovel>(lista: T[], ordem: Ordenacao): T[] {
+  const copia = [...lista];
+  switch (ordem) {
+    case "az":
+      return copia.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+    case "lancamento":
+      return copia.sort(
+        (a, b) =>
+          (PESO_STATUS[a.status] ?? 9) - (PESO_STATUS[b.status] ?? 9) ||
+          a.nome.localeCompare(b.nome, "pt-BR"),
+      );
+    case "destaque":
+    default:
+      // Destaque primeiro, depois a ordem manual do Studio, depois alfabetica.
+      return copia.sort(
+        (a, b) =>
+          Number(Boolean(b.destaque)) - Number(Boolean(a.destaque)) ||
+          (a.ordem ?? Number.MAX_SAFE_INTEGER) - (b.ordem ?? Number.MAX_SAFE_INTEGER) ||
+          a.nome.localeCompare(b.nome, "pt-BR"),
+      );
+  }
 }
 
 export function temFiltroAtivo(filtros: Filtros): boolean {
