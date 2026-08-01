@@ -8,8 +8,17 @@ import { cn } from "@/lib/utils";
  * a alternativa (Framer Motion) custaria ~40 KB gzip no caminho critico e
  * estouraria a meta de < 110 KB de JS inicial.
  *
- * Usa ref callback com cleanup (React 19) em vez de useEffect: o observer nasce
- * junto com o no e morre com ele, sem setState no corpo de um efeito.
+ * O CONTEUDO NUNCA COMECA INVISIVEL. Esta e a regra que manda aqui.
+ * A versao anterior renderizava `opacity-0` e so revelava quando o observer
+ * disparava — e o observer nao dispara se o JS falhar, se o navegador for
+ * antigo ou se a pagina nao estiver compondo quadros. Numa landing de vendas
+ * isso significa cartao de imovel invisivel e conversao zero, sem nenhum erro
+ * no console para denunciar. Verificado aqui: o card ficou em opacity 0.
+ *
+ * Agora a animacao e puramente decorativa: entra por cima de um conteudo que ja
+ * esta visivel. Se nada disparar, a pessoa so nao ve o efeito.
+ *
+ * Usa ref callback com cleanup (React 19) em vez de useEffect.
  */
 export function ScrollReveal({
   children,
@@ -21,26 +30,18 @@ export function ScrollReveal({
   atraso?: number;
   className?: string;
 }) {
-  // "oculto" -> aguardando entrar na viewport
-  // "revelando" -> entrou, roda a animacao
-  // "imediato" -> reduced-motion: aparece sem animacao nenhuma
-  const [estado, setEstado] = useState<"oculto" | "revelando" | "imediato">("oculto");
+  const [animar, setAnimar] = useState(false);
 
   const observarRef = useCallback((elemento: HTMLDivElement | null) => {
     if (!elemento) return;
 
-    // Quem pediu menos movimento recebe o conteudo direto, sem observer e sem
-    // classe de animacao: com `fill-mode: both`, uma animacao que nao progride
-    // deixaria o conteudo travado no quadro inicial (opacity 0).
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setEstado("imediato");
-      return;
-    }
+    // Quem pediu menos movimento nao recebe animacao nenhuma.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const observador = new IntersectionObserver(
       ([entrada]) => {
         if (!entrada.isIntersecting) return;
-        setEstado("revelando");
+        setAnimar(true);
         // Revelar uma unica vez: reanimar ao rolar de volta irrita.
         observador.disconnect();
       },
@@ -55,14 +56,13 @@ export function ScrollReveal({
   return (
     <div
       ref={observarRef}
+      // `backwards` em vez de `both`: a animacao aplica o quadro inicial so
+      // durante o atraso, e o elemento volta ao estado natural (visivel) ao fim.
       className={cn(
-        estado === "revelando" && "animate-[revelar_600ms_ease-out_both]",
-        estado === "oculto" && "opacity-0",
+        animar && "motion-safe:animate-[revelar_600ms_ease-out_backwards]",
         className,
       )}
-      style={
-        estado === "revelando" && atraso ? { animationDelay: `${atraso}ms` } : undefined
-      }
+      style={animar && atraso ? { animationDelay: `${atraso}ms` } : undefined}
     >
       {children}
     </div>

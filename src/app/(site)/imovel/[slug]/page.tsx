@@ -1,0 +1,281 @@
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { Check, MapPin, MessageCircle } from "lucide-react";
+import { BadgeStatus, Badge } from "@/components/ui/Badge";
+import { buttonClasses } from "@/components/ui/Button";
+import { CardImovel } from "@/components/imovel/CardImovel";
+import { GaleriaImovel } from "@/components/imovel/GaleriaImovel";
+import { buscarImovel, buscarSlugsImoveis } from "@/lib/sanity/fetch";
+import { linkWhatsApp } from "@/lib/whatsapp";
+import { descreverQuartos } from "@/lib/utils";
+import { site } from "@/lib/site";
+import type { PortableTextBlock } from "next-sanity";
+
+/** Prerenderiza todos os imoveis publicados: sao poucos e viram landing de anuncio. */
+export async function generateStaticParams() {
+  const slugs = await buscarSlugsImoveis();
+  return slugs.map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const imovel = await buscarImovel(slug);
+  if (!imovel) return {};
+
+  const titulo = imovel.seo?.titulo ?? `${imovel.nome} — ${imovel.regiao.nome}`;
+  const descricao =
+    imovel.seo?.descricao ??
+    imovel.chamada ??
+    `${descreverQuartos(imovel.quartos)} em ${imovel.regiao.nome}. ${site.descricaoCurta}`;
+  const imagem = imovel.seo?.imagem?.url ?? imovel.capa.url;
+
+  return {
+    title: titulo,
+    description: descricao,
+    alternates: { canonical: `/imovel/${imovel.slug}` },
+    openGraph: {
+      title: titulo,
+      description: descricao,
+      images: [{ url: imagem, width: 1200, height: 630 }],
+    },
+  };
+}
+
+export default async function PaginaImovel({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const imovel = await buscarImovel(slug);
+  if (!imovel) notFound();
+
+  const ctaWhatsApp = linkWhatsApp({
+    tipo: "imovel",
+    nome: imovel.nome,
+    bairro: imovel.regiao.nome,
+  });
+
+  const ficha = imovel.fichaTecnica;
+  const linhasFicha = [
+    ficha?.totalUnidades && ["Unidades", String(ficha.totalUnidades)],
+    ficha?.blocos && ["Blocos", String(ficha.blocos)],
+    ficha?.pavimentos && ["Pavimentos", String(ficha.pavimentos)],
+    ficha?.totalVagas && ["Vagas", String(ficha.totalVagas)],
+    ficha?.areaTerreno && ["Terreno", `${ficha.areaTerreno.toLocaleString("pt-BR")} m²`],
+    ficha?.entrega && ["Entrega", ficha.entrega],
+  ].filter(Boolean) as Array<[string, string]>;
+
+  return (
+    <article>
+      {/* Cabecalho */}
+      <div className="mx-auto max-w-6xl px-4 pt-10 sm:px-6">
+        <div className="flex flex-wrap items-center gap-2">
+          <BadgeStatus status={imovel.status} />
+          <Badge>{imovel.construtora.nome}</Badge>
+        </div>
+
+        <h1 className="text-brand-900 mt-4 text-[length:var(--text-h1)] font-semibold">
+          {imovel.nome}
+        </h1>
+
+        <p className="text-sand-600 mt-2 flex flex-wrap items-center gap-1.5">
+          <MapPin className="size-4 shrink-0" aria-hidden />
+          {imovel.endereco ?? imovel.regiao.nome}
+        </p>
+      </div>
+
+      {/* Galeria */}
+      <div className="mx-auto mt-8 max-w-6xl px-4 sm:px-6">
+        <GaleriaImovel
+          capa={imovel.capa}
+          galeria={imovel.galeria ?? []}
+          nome={imovel.nome}
+        />
+        <p className="text-sand-500 mt-2 font-sans text-xs">
+          Imagens meramente ilustrativas.
+        </p>
+      </div>
+
+      <div className="mx-auto mt-12 grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-3">
+        {/* Coluna de conteudo */}
+        <div className="lg:col-span-2">
+          {imovel.descricao && imovel.descricao.length > 0 && (
+            <section>
+              <h2 className="text-brand-900 text-[length:var(--text-h3)] font-semibold">
+                Sobre o empreendimento
+              </h2>
+              <div className="text-sand-700 mt-4 space-y-4 leading-relaxed">
+                {imovel.descricao.map((bloco) => (
+                  <p key={bloco._key}>{textoDoBloco(bloco)}</p>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {imovel.tipologias.length > 0 && (
+            <section className="mt-12">
+              <h2 className="text-brand-900 text-[length:var(--text-h3)] font-semibold">
+                Plantas disponíveis
+              </h2>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                {imovel.tipologias.map((t) => (
+                  <div
+                    key={t.rotulo}
+                    className="border-sand-200 rounded-[length:var(--radius-card)] border bg-white p-5"
+                  >
+                    {t.planta?.url && (
+                      <div className="bg-sand-50 relative mb-4 aspect-[4/3] overflow-hidden rounded-lg">
+                        <Image
+                          src={t.planta.url}
+                          alt={`Planta ${t.rotulo}`}
+                          fill
+                          sizes="(min-width: 640px) 50vw, 100vw"
+                          className="object-contain"
+                        />
+                      </div>
+                    )}
+                    <p className="text-brand-900 font-sans font-semibold">{t.rotulo}</p>
+                    <p className="text-sand-600 mt-1 text-sm">
+                      {t.quartos === 0 ? "Studio" : `${t.quartos} quartos`}
+                      {t.areaPrivativa && ` · ${t.areaPrivativa} m²`}
+                      {t.vagas ? ` · ${t.vagas} vaga${t.vagas > 1 ? "s" : ""}` : ""}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {imovel.diferenciais && imovel.diferenciais.length > 0 && (
+            <section className="mt-12">
+              <h2 className="text-brand-900 text-[length:var(--text-h3)] font-semibold">
+                Lazer e diferenciais
+              </h2>
+              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                {imovel.diferenciais.map((d) => (
+                  <li key={d} className="text-sand-700 flex items-center gap-2 text-sm">
+                    <Check className="text-brand-500 size-4 shrink-0" aria-hidden />
+                    {d}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {linhasFicha.length > 0 && (
+            <section className="mt-12">
+              <h2 className="text-brand-900 text-[length:var(--text-h3)] font-semibold">
+                Ficha técnica
+              </h2>
+              <dl className="border-sand-200 mt-4 grid gap-x-8 gap-y-3 border-t pt-4 sm:grid-cols-2">
+                {linhasFicha.map(([rotulo, valor]) => (
+                  <div key={rotulo} className="flex justify-between gap-4">
+                    <dt className="text-sand-500 text-sm">{rotulo}</dt>
+                    <dd className="text-sand-900 font-sans text-sm font-medium">
+                      {valor}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )}
+
+          {imovel.textoLegal && (
+            <p className="text-sand-400 border-sand-200 mt-12 border-t pt-6 text-xs leading-relaxed">
+              {imovel.textoLegal}
+            </p>
+          )}
+        </div>
+
+        {/* Coluna de conversao — sticky no desktop */}
+        <aside className="lg:col-span-1">
+          <div className="border-sand-200 sticky top-24 rounded-[length:var(--radius-card)] border bg-white p-6 shadow-[var(--shadow-card)]">
+            <p className="font-display text-brand-900 text-xl font-semibold">
+              Consulte condições
+            </p>
+            <p className="text-sand-600 mt-2 text-sm leading-relaxed">
+              Valores, entrada e subsídio variam conforme a unidade e o seu perfil. O
+              Cláudio simula na hora, sem compromisso.
+            </p>
+
+            <dl className="border-sand-200 mt-5 space-y-2 border-t pt-5 text-sm">
+              <div className="flex justify-between gap-4">
+                <dt className="text-sand-500">Tipologias</dt>
+                <dd className="text-sand-900 font-medium">
+                  {descreverQuartos(imovel.quartos)}
+                </dd>
+              </div>
+              {imovel.areaMin && (
+                <div className="flex justify-between gap-4">
+                  <dt className="text-sand-500">Área</dt>
+                  <dd className="text-sand-900 font-medium">
+                    {imovel.areaMin === imovel.areaMax
+                      ? `${imovel.areaMin} m²`
+                      : `${imovel.areaMin} a ${imovel.areaMax} m²`}
+                  </dd>
+                </div>
+              )}
+              <div className="flex justify-between gap-4">
+                <dt className="text-sand-500">Região</dt>
+                <dd className="text-sand-900 font-medium">{imovel.regiao.nome}</dd>
+              </div>
+            </dl>
+
+            <a
+              href={ctaWhatsApp}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonClasses("whatsapp", "lg", "mt-6 w-full")}
+            >
+              <MessageCircle className="size-4" aria-hidden />
+              Falar sobre este imóvel
+            </a>
+
+            <p className="text-sand-400 mt-3 text-center font-sans text-xs">
+              Resposta direta com o corretor · {site.creci}
+            </p>
+          </div>
+        </aside>
+      </div>
+
+      {imovel.relacionados.length > 0 && (
+        <section className="mx-auto mt-20 max-w-6xl px-4 sm:px-6">
+          <h2 className="text-brand-900 text-[length:var(--text-h3)] font-semibold">
+            Outros imóveis em {imovel.regiao.nome}
+          </h2>
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {imovel.relacionados.map((r) => (
+              <CardImovel key={r.id} imovel={r} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <div className="mx-auto mt-16 max-w-6xl px-4 sm:px-6">
+        <Link
+          href="/imoveis"
+          className="text-brand-600 hover:text-brand-800 font-sans text-sm font-medium"
+        >
+          ← Ver todos os imóveis
+        </Link>
+      </div>
+    </article>
+  );
+}
+
+/** O schema so permite paragrafo simples, entao extrair o texto basta. */
+function textoDoBloco(bloco: PortableTextBlock): string {
+  if (!Array.isArray(bloco.children)) return "";
+  return bloco.children
+    .map((filho) =>
+      typeof filho === "object" && filho && "text" in filho ? String(filho.text) : "",
+    )
+    .join("");
+}
