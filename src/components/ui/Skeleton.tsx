@@ -10,7 +10,7 @@ export function Skeleton({ className }: { className?: string }) {
   return (
     <div
       aria-hidden
-      className={cn("bg-sand-200/70 animate-pulse rounded-lg", className)}
+      className={cn("bg-noite-800/70 animate-pulse rounded-lg", className)}
     />
   );
 }
@@ -18,7 +18,7 @@ export function Skeleton({ className }: { className?: string }) {
 /** Esqueleto de um card do catalogo — espelha as proporcoes do CardImovel. */
 export function SkeletonCardImovel() {
   return (
-    <div className="overflow-hidden rounded-[length:var(--radius-card)] bg-white shadow-[var(--shadow-card)]">
+    <div className="bg-noite-900 overflow-hidden rounded-[length:var(--radius-card)] shadow-[var(--shadow-card)]">
       <Skeleton className="aspect-[4/3] rounded-none" />
       <div className="flex flex-col gap-3 p-4">
         <Skeleton className="h-4 w-24" />

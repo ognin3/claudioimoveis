@@ -8,6 +8,7 @@ import { depoimento } from "./documents/depoimento";
 import { configuracoes } from "./documents/configuracoes";
 import { tipologia } from "./objects/tipologia";
 import { seo } from "./objects/seo";
+import { local } from "./objects/local";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   // documentos
@@ -20,4 +21,5 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   // objetos reutilizaveis
   tipologia,
   seo,
+  local,
 ];

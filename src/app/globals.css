@@ -2,54 +2,47 @@
 
 /* ---------------------------------------------------------------------------
    Tokens — Claudio Corretor
-   Direcao: confianca + calor. Os renders das construtoras (Cury, JV, Direcional)
-   ja sao coloridos e saturados; a interface fica sobria de proposito para que a
-   imagem do imovel seja o elemento mais forte da tela.
-   Dark mode nao e prioridade — ver CLAUDE.md secao 4.
+   Tema ESCURO por padrao. Nao existe tema claro: o site inteiro e escuro.
+
+   Direcao: preto quente + dourado. Os neutros levam um leve viés terroso
+   (nunca cinza puro nem preto puro) — cinza neutro sobre foto de imovel da ar
+   de dashboard, e o quente da ar de material de lancamento. O dourado e o unico
+   acento; usado com parcimonia, ele carrega o "charme" sozinho.
+
+   Foto de imovel sobre fundo escuro ganha contraste e saturacao percebida, que
+   e exatamente o que interessa aqui: o produto e a imagem.
 --------------------------------------------------------------------------- */
 
 @theme {
-  /* Marca — petroleo profundo. Fundo de header, footer e superficies de destaque. */
-  --color-brand-50: #f0f6f8;
-  --color-brand-100: #d9e9ee;
-  --color-brand-200: #b4d3dd;
-  --color-brand-300: #83b5c5;
-  --color-brand-400: #4d8fa5;
-  --color-brand-500: #2f7086;
-  --color-brand-600: #265b6e;
-  --color-brand-700: #21495a;
-  --color-brand-800: #1c3b49;
-  --color-brand-900: #142b36;
-  --color-brand-950: #0b1a21;
+  /* Neutros quentes — do fundo da pagina (950) ao texto de titulo (50). */
+  --color-noite-950: #0c0b0a;
+  --color-noite-900: #141311;
+  --color-noite-800: #1c1a18;
+  --color-noite-700: #26231f;
+  --color-noite-600: #35312c;
+  --color-noite-500: #8c8377; /* texto apagado — ja passa AA sobre 950 */
+  --color-noite-400: #a89f92; /* texto secundario */
+  --color-noite-300: #b8b0a4;
+  --color-noite-200: #d8d2c8;
+  --color-noite-100: #efebe4;
+  --color-noite-50: #faf8f5;
 
-  /* Acento — ambar quente. Reservado para CTA e destaques. Usar com parcimonia. */
-  --color-accent-50: #fdf7ed;
-  --color-accent-100: #f8e8cc;
-  --color-accent-200: #f0cf95;
-  --color-accent-300: #e7b25e;
-  --color-accent-400: #dd9838;
-  --color-accent-500: #c8873a;
-  --color-accent-600: #a86a26;
-  --color-accent-700: #874f22;
-  --color-accent-800: #6f4022;
-  --color-accent-900: #5d361f;
+  /* Dourado — acento unico. CTA, links, detalhes. Nunca como fundo de bloco grande. */
+  --color-ouro-950: #201803;
+  --color-ouro-900: #2e2408;
+  --color-ouro-800: #4a3a0f;
+  --color-ouro-700: #6b5417;
+  --color-ouro-600: #937424;
+  --color-ouro-500: #c39a3a;
+  --color-ouro-400: #dfb85c;
+  --color-ouro-300: #ecd08a;
+  --color-ouro-200: #f4e3b6;
+  --color-ouro-100: #faf1dc;
 
-  /* Neutros quentes — cinza puro deixa imobiliario com cara de planilha. */
-  --color-sand-50: #faf9f7;
-  --color-sand-100: #f2f0ec;
-  --color-sand-200: #e6e2db;
-  --color-sand-300: #d3cdc2;
-  --color-sand-400: #b0a898;
-  --color-sand-500: #8b8273;
-  --color-sand-600: #6e6659;
-  --color-sand-700: #575146;
-  --color-sand-800: #3d3831;
-  --color-sand-900: #262220;
-
-  /* Status do imovel — mesmas cores no card, no filtro e no badge. */
-  --color-status-lancamento: #1f7a4d;
-  --color-status-obras: #b45309;
-  --color-status-pronto: #26647d;
+  /* Status do imovel — versoes claras, legiveis sobre fundo escuro. */
+  --color-status-lancamento: #5fd68f;
+  --color-status-obras: #f0a04b;
+  --color-status-pronto: #6fb4e8;
 
   /* Verde oficial do WhatsApp. So em affordance de WhatsApp, nunca decorativo. */
   --color-whatsapp: #25d366;
@@ -68,9 +61,11 @@
   --radius-card: 1rem;
   --radius-pill: 999px;
 
-  /* Sombras suaves e quentes — sombra neutra "suja" o fundo areia. */
-  --shadow-card: 0 1px 2px rgb(38 34 32 / 0.04), 0 8px 24px -8px rgb(38 34 32 / 0.12);
-  --shadow-lift: 0 2px 4px rgb(38 34 32 / 0.06), 0 16px 40px -12px rgb(38 34 32 / 0.18);
+  /* No escuro, sombra preta some. Profundidade vem de borda clara sutil + halo. */
+  --shadow-card:
+    0 1px 0 0 rgb(255 255 255 / 0.04) inset, 0 8px 24px -12px rgb(0 0 0 / 0.8);
+  --shadow-lift:
+    0 1px 0 0 rgb(255 255 255 / 0.06) inset, 0 24px 48px -16px rgb(0 0 0 / 0.9);
 
   /* Altura da barra de filtros sticky — usada tambem no scroll-margin das ancoras. */
   --spacing-filtros: 4.5rem;
@@ -81,11 +76,13 @@
     /* Ancoras nao ficam escondidas atras do header + barra de filtros sticky. */
     scroll-padding-top: calc(var(--spacing-filtros) + 1rem);
     -webkit-text-size-adjust: 100%;
+    /* Avisa o navegador: formulario, scrollbar e menus nativos vem escuros. */
+    color-scheme: dark;
   }
 
   body {
-    background-color: var(--color-sand-50);
-    color: var(--color-sand-900);
+    background-color: var(--color-noite-950);
+    color: var(--color-noite-300);
     font-family: var(--font-sans);
     /* Evita scroll horizontal por causa de galeria e carrossel. */
     overflow-x: hidden;
@@ -94,6 +91,7 @@
   h1,
   h2,
   h3 {
+    color: var(--color-noite-50);
     font-family: var(--font-display);
     text-wrap: balance;
     letter-spacing: -0.02em;
@@ -105,7 +103,7 @@
 
   /* Foco visivel e consistente — meta de acessibilidade 100 no Lighthouse. */
   :focus-visible {
-    outline: 2px solid var(--color-brand-500);
+    outline: 2px solid var(--color-ouro-400);
     outline-offset: 2px;
     border-radius: 2px;
   }
@@ -115,6 +113,12 @@
   video {
     max-width: 100%;
     height: auto;
+  }
+
+  /* Mapa embutido: sem borda e ja no tom do fundo enquanto carrega. */
+  iframe {
+    border: 0;
+    background-color: var(--color-noite-800);
   }
 }
 
@@ -158,7 +162,7 @@
   }
 }
 
-/* Entrada do ScrollReveal — a classe .revelado e alternada por IntersectionObserver. */
+/* Entrada do ScrollReveal. `backwards` no uso: o conteudo NUNCA comeca oculto. */
 @keyframes revelar {
   from {
     opacity: 0;
@@ -170,7 +174,7 @@
   }
 }
 
-/* Respeitar quem pediu menos movimento. Vale para todo o ScrollReveal da Fase 2. */
+/* Respeitar quem pediu menos movimento. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

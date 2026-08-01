@@ -93,7 +93,19 @@ async function main() {
     status: "lancamento",
     construtora: { _type: "reference", _ref: "construtora-jv" },
     regiao: { _type: "reference", _ref: "regiao-nova-iguacu" },
-    endereco: "Rua Carlos Laert, 35 — Vila Nova, Nova Iguaçu - RJ",
+    // Sem `coordenadas`: nao invento latitude/longitude. O mapa cai no endereco
+    // em texto, que o Google resolve bem. Preencher no Studio quando confirmado.
+    locais: [
+      {
+        _key: "empreendimento",
+        _type: "local",
+        tipo: "empreendimento",
+        endereco: "Rua Carlos Laert, 35 — Vila Nova, Nova Iguaçu - RJ",
+        googleMaps:
+          "https://maps.google.com/maps?daddr=" +
+          encodeURIComponent("Rua Carlos Laert, 35, Vila Nova, Nova Iguaçu - RJ"),
+      },
+    ],
     chamada: "2 quartos com varanda e lazer completo em Nova Iguaçu",
     descricao: [
       {

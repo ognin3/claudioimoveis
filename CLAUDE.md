@@ -132,7 +132,17 @@ Claudio-Imoveis-V2/
 4. **Hospedagem**: Vercel em `*.vercel.app` por enquanto. Domínio próprio depois —
    toda URL canônica passa por `NEXT_PUBLIC_SITE_URL` para a troca ser trivial.
 5. **Página dedicada E pop-out**: resolvido com Parallel + Intercepting Routes, um só conteúdo.
-6. **Multi-construtora.** O schema tem document type `construtora` (nome, logo, slug)
+6. **Tema escuro, e só ele.** Decisão do cliente em 29/07/2026. Preto quente
+   (`noite-*`) + dourado (`ouro-*`) como acento único. Sem tema claro e sem
+   alternador. Regras que caíram junto:
+   - Tom `noite-600` ou mais escuro **nunca** é cor de texto — só superfície e
+     borda. Texto secundário começa em `noite-400`.
+   - Dourado como fundo pede texto `noite-950`. Branco sobre dourado não passa
+     em contraste e ainda suja a cor.
+   - Todo par texto/fundo tem que passar AA (4,5:1; 3:1 em texto grande). Já
+     existe um script de auditoria de contraste usado na verificação — rodar
+     de novo a cada mudança de paleta.
+7. **Multi-construtora.** O schema tem document type `construtora` (nome, logo, slug)
    referenciado pelo `imovel`, e construtora é **filtro** no catálogo. O pipeline da Fase 4
    cobre só a Cury; os imóveis de JV, Direcional, Você RJ e Rebouças entram à mão pelo Studio,
    alimentados pelos books em `docs/MATERIAL-NOVO.md`.

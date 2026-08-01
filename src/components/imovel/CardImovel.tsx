@@ -29,7 +29,7 @@ export function CardImovel({
   return (
     <Link
       href={`/imovel/${imovel.slug}`}
-      className="group focus-visible:outline-brand-500 block overflow-hidden rounded-[length:var(--radius-card)] bg-white shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2"
+      className="group focus-visible:outline-ouro-400 bg-noite-900 block overflow-hidden rounded-[length:var(--radius-card)] shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2"
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         <Image
@@ -48,24 +48,24 @@ export function CardImovel({
       </div>
 
       <div className="p-4">
-        <p className="text-sand-500 flex items-center gap-1 font-sans text-xs">
+        <p className="text-noite-500 flex items-center gap-1 font-sans text-xs">
           <MapPin className="size-3.5 shrink-0" aria-hidden />
           {imovel.regiao.nome}
           <span aria-hidden>·</span>
           <span>{imovel.construtora.nome}</span>
         </p>
 
-        <h3 className="text-brand-900 mt-1.5 text-lg leading-snug font-semibold">
+        <h3 className="text-noite-50 mt-1.5 text-lg leading-snug font-semibold">
           {imovel.nome}
         </h3>
 
         {imovel.chamada && (
-          <p className="text-sand-600 mt-1 line-clamp-2 text-sm">{imovel.chamada}</p>
+          <p className="text-noite-400 mt-1 line-clamp-2 text-sm">{imovel.chamada}</p>
         )}
 
-        <p className="text-sand-700 mt-3 font-sans text-sm font-medium">
+        <p className="text-noite-300 mt-3 font-sans text-sm font-medium">
           {descreverQuartos(imovel.quartos)}
-          {area && <span className="text-sand-400"> · {area}</span>}
+          {area && <span className="text-noite-400"> · {area}</span>}
         </p>
       </div>
     </Link>

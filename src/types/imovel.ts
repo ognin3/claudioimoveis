@@ -72,9 +72,21 @@ export type FichaTecnica = {
   entrega?: string | null;
 };
 
+export type TipoLocal = "empreendimento" | "stand" | "decorado";
+
+/** Um endereco do empreendimento. O stand de vendas raramente fica no mesmo lugar. */
+export type Local = {
+  tipo: TipoLocal;
+  endereco: string;
+  waze: string | null;
+  googleMaps: string | null;
+};
+
 export type ImovelCompleto = CardImovel & {
-  endereco: string | null;
+  locais: Local[] | null;
   coordenadas: { lat: number; lng: number } | null;
+  /** Texto "Sobre a região", herdado do documento `regiao`. */
+  textoRegiao: string | null;
   descricao: PortableTextBlock[] | null;
   diferenciais: string[] | null;
   textoLegal: string | null;

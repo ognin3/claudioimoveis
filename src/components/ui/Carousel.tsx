@@ -102,7 +102,7 @@ export function Carousel({
                 aria-hidden
                 className={cn(
                   "h-1.5 rounded-full transition-all duration-200",
-                  i === indice ? "w-5 bg-white" : "w-1.5 bg-white/55",
+                  i === indice ? "bg-noite-900 w-5" : "bg-noite-900/50 w-1.5",
                 )}
               />
             ))}
@@ -136,8 +136,8 @@ function BotaoNavegacao({
       aria-label={lado === "anterior" ? "Imagem anterior" : "Próxima imagem"}
       className={cn(
         "absolute top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full",
-        "text-sand-800 bg-white/90 shadow-[var(--shadow-card)] backdrop-blur",
-        "transition-all hover:bg-white disabled:pointer-events-none disabled:opacity-0",
+        "text-noite-100 bg-noite-900/80 ring-noite-700 shadow-[var(--shadow-card)] ring-1 backdrop-blur",
+        "hover:bg-noite-700 transition-all disabled:pointer-events-none disabled:opacity-0",
         lado === "anterior" ? "left-3" : "right-3",
       )}
     >

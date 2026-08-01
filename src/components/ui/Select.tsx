@@ -33,17 +33,17 @@ export function Select({
       <RadixSelect.Trigger
         aria-label={rotuloAcessivel}
         className={cn(
-          "inline-flex h-11 items-center justify-between gap-2 rounded-[length:var(--radius-pill)] bg-white px-4",
-          "text-sand-800 ring-sand-300 font-sans text-sm font-medium ring-1 ring-inset",
-          "hover:bg-sand-50 transition-colors",
-          "focus-visible:ring-brand-500 focus-visible:ring-2 focus-visible:outline-none",
-          "data-[placeholder]:text-sand-500",
+          "bg-noite-900 inline-flex h-11 items-center justify-between gap-2 rounded-[length:var(--radius-pill)] px-4",
+          "text-noite-200 ring-noite-700 font-sans text-sm font-medium ring-1 ring-inset",
+          "hover:bg-noite-950 transition-colors",
+          "focus-visible:ring-ouro-400 focus-visible:ring-2 focus-visible:outline-none",
+          "data-[placeholder]:text-noite-500",
           className,
         )}
       >
         <RadixSelect.Value placeholder={placeholder} />
         <RadixSelect.Icon>
-          <ChevronDown className="text-sand-500 size-4" aria-hidden />
+          <ChevronDown className="text-noite-500 size-4" aria-hidden />
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
 
@@ -51,7 +51,7 @@ export function Select({
         <RadixSelect.Content
           position="popper"
           sideOffset={6}
-          className="ring-sand-200 z-50 max-h-72 min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-xl bg-white shadow-[var(--shadow-lift)] ring-1 motion-safe:data-[state=open]:animate-[fade-in_140ms_ease-out]"
+          className="ring-noite-800 bg-noite-900 z-50 max-h-72 min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-xl shadow-[var(--shadow-lift)] ring-1 motion-safe:data-[state=open]:animate-[fade-in_140ms_ease-out]"
         >
           <RadixSelect.Viewport className="p-1.5">
             {opcoes.map((opcao) => (
@@ -60,14 +60,14 @@ export function Select({
                 value={opcao.valor}
                 className={cn(
                   "relative flex h-10 cursor-pointer items-center rounded-lg pr-8 pl-3",
-                  "text-sand-800 font-sans text-sm select-none",
-                  "data-[highlighted]:bg-brand-50 data-[highlighted]:text-brand-900 data-[highlighted]:outline-none",
+                  "text-noite-200 font-sans text-sm select-none",
+                  "data-[highlighted]:bg-noite-800 data-[highlighted]:text-noite-50 data-[highlighted]:outline-none",
                   "data-[state=checked]:font-semibold",
                 )}
               >
                 <RadixSelect.ItemText>{opcao.rotulo}</RadixSelect.ItemText>
                 <RadixSelect.ItemIndicator className="absolute right-2.5">
-                  <Check className="text-brand-600 size-4" aria-hidden />
+                  <Check className="text-ouro-400 size-4" aria-hidden />
                 </RadixSelect.ItemIndicator>
               </RadixSelect.Item>
             ))}

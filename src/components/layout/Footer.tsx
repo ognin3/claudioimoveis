@@ -30,27 +30,27 @@ export async function Footer() {
   const ano = new Date().getFullYear();
 
   return (
-    <footer className="bg-brand-900 text-sand-200 mt-24">
+    <footer className="bg-noite-900 text-noite-300 border-noite-800 mt-24 border-t">
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-2">
-            <p className="font-display text-xl font-semibold text-white">
+            <p className="font-display text-noite-50 text-xl font-semibold">
               Cláudio Corretor
             </p>
-            <p className="text-sand-300 mt-3 max-w-sm text-sm leading-relaxed">
+            <p className="text-noite-400 mt-3 max-w-sm text-sm leading-relaxed">
               {site.bio}
             </p>
           </div>
 
           <div>
-            <p className="font-sans text-sm font-semibold text-white">Contato</p>
+            <p className="text-noite-50 font-sans text-sm font-semibold">Contato</p>
             <ul className="mt-3 space-y-2 text-sm">
               <li>
                 <a
                   href={linkWhatsApp()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-whatsapp text-sand-300 inline-flex items-center gap-2 transition-colors"
+                  className="hover:text-whatsapp text-noite-300 inline-flex items-center gap-2 transition-colors"
                 >
                   <MessageCircle className="size-4 shrink-0" aria-hidden />
                   {site.whatsappExibicao}
@@ -61,7 +61,7 @@ export async function Footer() {
                   href={site.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sand-300 inline-flex items-center gap-2 transition-colors hover:text-white"
+                  className="text-noite-300 hover:text-noite-50 inline-flex items-center gap-2 transition-colors"
                 >
                   <IconeInstagram className="size-4 shrink-0" />
                   {site.instagramHandle}
@@ -70,7 +70,7 @@ export async function Footer() {
               <li>
                 <a
                   href={`mailto:${site.email}`}
-                  className="text-sand-300 inline-flex items-center gap-2 break-all transition-colors hover:text-white"
+                  className="text-noite-300 hover:text-noite-50 inline-flex items-center gap-2 break-all transition-colors"
                 >
                   <Mail className="size-4 shrink-0" aria-hidden />
                   {site.email}
@@ -80,8 +80,8 @@ export async function Footer() {
           </div>
 
           <div>
-            <p className="font-sans text-sm font-semibold text-white">Construtoras</p>
-            <ul className="text-sand-300 mt-3 space-y-1.5 text-sm">
+            <p className="text-noite-50 font-sans text-sm font-semibold">Construtoras</p>
+            <ul className="text-noite-400 mt-3 space-y-1.5 text-sm">
               {construtoras.map((c) => (
                 <li key={c.slug}>{c.nome}</li>
               ))}
@@ -89,18 +89,18 @@ export async function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="border-noite-800 mt-12 flex flex-col gap-4 border-t pt-6 sm:flex-row sm:items-center sm:justify-between">
           {/* CRECI: obrigatorio, sempre visivel. */}
-          <p className="text-sand-200 font-sans text-sm font-medium">{site.creci}</p>
-          <div className="text-sand-400 flex flex-wrap items-center gap-x-5 gap-y-2 font-sans text-xs">
-            <Link href="/privacidade" className="transition-colors hover:text-white">
+          <p className="text-noite-200 font-sans text-sm font-medium">{site.creci}</p>
+          <div className="text-noite-400 flex flex-wrap items-center gap-x-5 gap-y-2 font-sans text-xs">
+            <Link href="/privacidade" className="hover:text-noite-50 transition-colors">
               Política de privacidade
             </Link>
             <span>© {ano} Cláudio Corretor</span>
           </div>
         </div>
 
-        <p className="text-sand-500 mt-6 font-sans text-xs leading-relaxed">
+        <p className="text-noite-500 mt-6 font-sans text-xs leading-relaxed">
           Imagens meramente ilustrativas. Os empreendimentos apresentados são de
           responsabilidade das respectivas construtoras e estão sujeitos a alteração e à
           disponibilidade de unidades.

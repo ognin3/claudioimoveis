@@ -42,13 +42,13 @@ export function Modal({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="bg-brand-950/60 fixed inset-0 z-50 backdrop-blur-sm motion-safe:data-[state=open]:animate-[fade-in_200ms_ease-out]" />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm motion-safe:data-[state=open]:animate-[fade-in_200ms_ease-out]" />
 
         <Dialog.Content
           className={cn(
             "fixed top-1/2 left-1/2 z-50 w-[calc(100vw-2rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2",
             "max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain",
-            "bg-sand-50 rounded-[length:var(--radius-card)] shadow-[var(--shadow-lift)]",
+            "bg-noite-950 rounded-[length:var(--radius-card)] shadow-[var(--shadow-lift)]",
             "focus:outline-none",
             "motion-safe:data-[state=open]:animate-[modal-in_220ms_ease-out]",
             className,
@@ -57,7 +57,7 @@ export function Modal({
           {tituloOculto ? (
             <Dialog.Title className="sr-only">{titulo}</Dialog.Title>
           ) : (
-            <Dialog.Title className="text-brand-900 px-6 pt-6 text-[length:var(--text-h3)] font-semibold">
+            <Dialog.Title className="text-noite-50 px-6 pt-6 text-[length:var(--text-h3)] font-semibold">
               {titulo}
             </Dialog.Title>
           )}
@@ -67,7 +67,7 @@ export function Modal({
           ) : null}
 
           <Dialog.Close
-            className="text-sand-700 hover:text-sand-900 absolute top-4 right-4 z-10 grid size-11 place-items-center rounded-full bg-white/90 shadow-[var(--shadow-card)] backdrop-blur transition-colors hover:bg-white"
+            className="text-noite-300 hover:text-noite-100 bg-noite-800/90 ring-noite-700 hover:bg-noite-700 absolute top-4 right-4 z-10 grid size-11 place-items-center rounded-full shadow-[var(--shadow-card)] ring-1 backdrop-blur transition-colors"
             aria-label="Fechar"
           >
             <X className="size-5" aria-hidden />

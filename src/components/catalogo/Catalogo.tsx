@@ -134,10 +134,10 @@ export function Catalogo({
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <header className="mb-8">
-        <h1 className="text-brand-900 text-[length:var(--text-h1)] font-semibold">
+        <h1 className="text-noite-50 text-[length:var(--text-h1)] font-semibold">
           Imóveis disponíveis
         </h1>
-        <p className="text-sand-600 mt-2">
+        <p className="text-noite-400 mt-2">
           {resultados.length === imoveis.length
             ? `${imoveis.length} ${imoveis.length === 1 ? "empreendimento" : "empreendimentos"} no Grande Rio.`
             : `${resultados.length} de ${imoveis.length} empreendimentos.`}
@@ -152,7 +152,7 @@ export function Catalogo({
           <SlidersHorizontal className="size-4" aria-hidden />
           Filtrar
           {temFiltroAtivo(filtros) && (
-            <span className="bg-brand-800 ml-1 grid size-5 place-items-center rounded-full text-xs text-white">
+            <span className="bg-ouro-500 ml-1 grid size-5 place-items-center rounded-full text-xs text-white">
               {filtros.regiao.length +
                 filtros.quartos.length +
                 filtros.status.length +
@@ -210,7 +210,7 @@ export function Catalogo({
           <button
             type="button"
             onClick={() => atualizar(filtrosVazios)}
-            className="text-brand-600 hover:text-brand-800 ml-1 font-sans text-sm font-medium underline underline-offset-2"
+            className="text-ouro-400 hover:text-ouro-300 ml-1 font-sans text-sm font-medium underline underline-offset-2"
           >
             Limpar filtros
           </button>
@@ -273,7 +273,7 @@ function GrupoFiltro({
 }) {
   return (
     <div>
-      <p className="text-sand-800 mb-2 font-sans text-sm font-semibold">{titulo}</p>
+      <p className="text-noite-200 mb-2 font-sans text-sm font-semibold">{titulo}</p>
       <div className="flex flex-wrap gap-2">{children}</div>
     </div>
   );
@@ -281,11 +281,11 @@ function GrupoFiltro({
 
 function VazioSemResultado({ onLimpar }: { onLimpar: () => void }) {
   return (
-    <div className="border-sand-200 rounded-[length:var(--radius-card)] border border-dashed py-16 text-center">
-      <p className="font-display text-brand-900 text-xl font-semibold">
+    <div className="border-noite-800 rounded-[length:var(--radius-card)] border border-dashed py-16 text-center">
+      <p className="font-display text-noite-50 text-xl font-semibold">
         Nenhum imóvel com esses filtros
       </p>
-      <p className="text-sand-600 mx-auto mt-2 max-w-sm text-sm">
+      <p className="text-noite-400 mx-auto mt-2 max-w-sm text-sm">
         Talvez o Cláudio tenha algo parecido que ainda não está no site. Vale perguntar.
       </p>
       <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">

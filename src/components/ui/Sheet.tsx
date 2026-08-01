@@ -31,12 +31,12 @@ export function Sheet({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="bg-brand-950/50 fixed inset-0 z-50 motion-safe:data-[state=open]:animate-[fade-in_200ms_ease-out]" />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/70 motion-safe:data-[state=open]:animate-[fade-in_200ms_ease-out]" />
 
         <Dialog.Content
           className={cn(
             "fixed inset-x-0 bottom-0 z-50 flex max-h-[85dvh] flex-col",
-            "bg-sand-50 rounded-t-[length:var(--radius-card)] shadow-[var(--shadow-lift)]",
+            "bg-noite-950 rounded-t-[length:var(--radius-card)] shadow-[var(--shadow-lift)]",
             "focus:outline-none",
             // Sem animacao de saida — mesma razao do Modal. Ver CLAUDE.md 5.8.
             // `motion-safe:` e obrigatorio aqui: a entrada parte de translateY(100%),
@@ -47,15 +47,15 @@ export function Sheet({
         >
           {/* Alca visual: sinaliza que o painel e arrastavel/fechavel. */}
           <div className="flex justify-center pt-3 pb-1">
-            <div className="bg-sand-300 h-1 w-10 rounded-full" aria-hidden />
+            <div className="bg-noite-700 h-1 w-10 rounded-full" aria-hidden />
           </div>
 
-          <div className="border-sand-200 flex items-center justify-between border-b px-5 pb-3">
-            <Dialog.Title className="font-display text-brand-900 text-lg font-semibold">
+          <div className="border-noite-800 flex items-center justify-between border-b px-5 pb-3">
+            <Dialog.Title className="font-display text-noite-50 text-lg font-semibold">
               {titulo}
             </Dialog.Title>
             <Dialog.Close
-              className="text-sand-600 hover:bg-sand-100 hover:text-sand-900 grid size-10 place-items-center rounded-full transition-colors"
+              className="text-noite-400 hover:bg-noite-900 hover:text-noite-100 grid size-10 place-items-center rounded-full transition-colors"
               aria-label="Fechar"
             >
               <X className="size-5" aria-hidden />
@@ -67,7 +67,7 @@ export function Sheet({
           </div>
 
           {rodape && (
-            <div className="border-sand-200 bg-sand-50 border-t px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+            <div className="border-noite-800 bg-noite-950 border-t px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
               {rodape}
             </div>
           )}

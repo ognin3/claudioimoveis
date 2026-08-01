@@ -35,23 +35,23 @@ export default async function Home() {
               className="object-cover"
             />
           ) : (
-            <div className="from-brand-800 to-brand-950 h-full w-full bg-gradient-to-br" />
+            <div className="from-noite-800 to-noite-950 h-full w-full bg-gradient-to-br" />
           )}
           {/* Escurece o suficiente para o texto passar em contraste AA sobre qualquer foto. */}
-          <div className="from-brand-950/92 via-brand-950/75 to-brand-950/45 absolute inset-0 bg-gradient-to-r" />
+          <div className="from-noite-950/95 via-noite-950/80 to-noite-950/35 absolute inset-0 bg-gradient-to-r" />
         </div>
 
         <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6 sm:py-32 lg:py-40">
           <div className="max-w-2xl">
-            <p className="text-accent-300 font-sans text-sm font-semibold tracking-[0.18em] uppercase">
+            <p className="text-ouro-300 font-sans text-sm font-semibold tracking-[0.18em] uppercase">
               Minha Casa Minha Vida · Rio de Janeiro
             </p>
 
-            <h1 className="mt-5 text-[length:var(--text-display)] leading-[1.05] font-semibold text-white">
+            <h1 className="text-noite-50 mt-5 text-[length:var(--text-display)] leading-[1.05] font-semibold">
               O sonho da casa própria com parcela que cabe no seu bolso
             </h1>
 
-            <p className="text-sand-200 mt-6 max-w-xl text-lg leading-relaxed">
+            <p className="text-noite-200 mt-6 max-w-xl text-lg leading-relaxed">
               Lançamentos e imóveis prontos no Rio, Niterói, São Gonçalo e Baixada.
               Entrada facilitada, lazer completo e a ajuda de quem conhece cada
               empreendimento de perto.
@@ -93,16 +93,16 @@ export default async function Home() {
         <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <h2 className="text-brand-900 text-[length:var(--text-h2)] font-semibold">
+              <h2 className="text-noite-50 text-[length:var(--text-h2)] font-semibold">
                 Em destaque agora
               </h2>
-              <p className="text-sand-600 mt-2">
+              <p className="text-noite-400 mt-2">
                 Selecionados pelo Cláudio entre os lançamentos e obras do momento.
               </p>
             </div>
             <Link
               href="/imoveis"
-              className="text-brand-600 hover:text-brand-800 focus-visible:outline-brand-500 inline-flex items-center gap-1 rounded font-sans text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4"
+              className="text-ouro-400 hover:text-ouro-300 focus-visible:outline-ouro-400 inline-flex items-center gap-1 rounded font-sans text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-4"
             >
               Ver todos
               <ArrowRight className="size-4" aria-hidden />
@@ -120,12 +120,12 @@ export default async function Home() {
       )}
 
       {/* -------------------------------------------------------- Como funciona */}
-      <section className="bg-sand-100 py-20">
+      <section className="bg-noite-900 py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <h2 className="text-brand-900 text-center text-[length:var(--text-h2)] font-semibold">
+          <h2 className="text-noite-50 text-center text-[length:var(--text-h2)] font-semibold">
             Como funciona
           </h2>
-          <p className="text-sand-600 mx-auto mt-3 max-w-xl text-center">
+          <p className="text-noite-400 mx-auto mt-3 max-w-xl text-center">
             Do primeiro contato às chaves na mão, sem burocracia e sem custo para você.
           </p>
 
@@ -156,11 +156,11 @@ export default async function Home() {
       <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
         <div className="grid items-center gap-10 sm:grid-cols-5">
           <div className="sm:col-span-3">
-            <h2 className="text-brand-900 text-[length:var(--text-h2)] font-semibold">
+            <h2 className="text-noite-50 text-[length:var(--text-h2)] font-semibold">
               Quem vai te atender
             </h2>
-            <p className="text-sand-700 mt-4 text-lg leading-relaxed">{site.bio}</p>
-            <p className="text-sand-600 mt-4 leading-relaxed">
+            <p className="text-noite-300 mt-4 text-lg leading-relaxed">{site.bio}</p>
+            <p className="text-noite-400 mt-4 leading-relaxed">
               Corretor credenciado ({site.creci}), com atuação nos empreendimentos da
               Cury, JV, Direcional, Você RJ e Rebouças. O atendimento é direto com ele —
               sem call center, sem intermediário.
@@ -179,12 +179,12 @@ export default async function Home() {
           </div>
 
           <div className="sm:col-span-2">
-            <div className="bg-brand-50 ring-brand-100 rounded-[length:var(--radius-card)] p-8 ring-1">
-              <BadgeCheck className="text-brand-500 size-8" aria-hidden />
-              <p className="font-display text-brand-900 mt-4 text-xl leading-snug font-semibold">
+            <div className="bg-ouro-950 ring-ouro-800 rounded-[length:var(--radius-card)] p-8 ring-1">
+              <BadgeCheck className="text-ouro-400 size-8" aria-hidden />
+              <p className="font-display text-noite-50 mt-4 text-xl leading-snug font-semibold">
                 Assessoria sem custo
               </p>
-              <p className="text-sand-600 mt-2 text-sm leading-relaxed">
+              <p className="text-noite-400 mt-2 text-sm leading-relaxed">
                 A comissão do corretor é paga pela construtora. Você recebe orientação
                 completa sobre subsídio, FGTS e financiamento sem pagar nada a mais por
                 isso.
@@ -195,12 +195,12 @@ export default async function Home() {
       </section>
 
       {/* ------------------------------------------------------------ CTA final */}
-      <section className="bg-brand-900">
+      <section className="bg-noite-900">
         <div className="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <h2 className="text-[length:var(--text-h2)] font-semibold text-white">
+          <h2 className="text-noite-50 text-[length:var(--text-h2)] font-semibold">
             Ainda dá tempo de sair do aluguel este ano
           </h2>
-          <p className="text-sand-300 mt-4 text-lg">
+          <p className="text-noite-300 mt-4 text-lg">
             Mande uma mensagem e descubra em minutos quanto ficaria a sua parcela.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
@@ -218,7 +218,7 @@ export default async function Home() {
               className={buttonClasses(
                 "outline",
                 "lg",
-                "border-white/25 text-white hover:bg-white/10",
+                "border-noite-700 text-noite-100 hover:bg-noite-800",
               )}
             >
               Ver imóveis
@@ -236,8 +236,8 @@ function Faixa({ numero, rotulo }: { numero: string; rotulo: string }) {
     // numero aparece em cima. Sem isso o rotulo seria lido duas vezes pelo
     // leitor de tela — um <dt> sr-only mais um <p> visivel com o mesmo texto.
     <div className="flex flex-col-reverse">
-      <dt className="text-sand-300 mt-0.5 font-sans text-sm">{rotulo}</dt>
-      <dd className="font-display text-2xl font-semibold text-white">{numero}</dd>
+      <dt className="text-noite-300 mt-0.5 font-sans text-sm">{rotulo}</dt>
+      <dd className="font-display text-noite-50 text-2xl font-semibold">{numero}</dd>
     </div>
   );
 }
@@ -254,15 +254,15 @@ function Passo({
   texto: string;
 }) {
   return (
-    <li className="rounded-[length:var(--radius-card)] bg-white p-7 shadow-[var(--shadow-card)]">
+    <li className="bg-noite-900 rounded-[length:var(--radius-card)] p-7 shadow-[var(--shadow-card)]">
       <div className="flex items-center gap-3">
-        <span className="bg-brand-800 grid size-9 shrink-0 place-items-center rounded-full font-sans text-sm font-semibold text-white">
+        <span className="bg-ouro-400 text-noite-950 grid size-9 shrink-0 place-items-center rounded-full font-sans text-sm font-semibold">
           {numero}
         </span>
-        <Icone className="text-brand-400 size-5" />
+        <Icone className="text-ouro-500 size-5" />
       </div>
-      <h3 className="text-brand-900 mt-4 text-lg font-semibold">{titulo}</h3>
-      <p className="text-sand-600 mt-2 text-sm leading-relaxed">{texto}</p>
+      <h3 className="text-noite-50 mt-4 text-lg font-semibold">{titulo}</h3>
+      <p className="text-noite-400 mt-2 text-sm leading-relaxed">{texto}</p>
     </li>
   );
 }

@@ -11,16 +11,16 @@ import { site } from "@/lib/site";
  */
 export function Header() {
   return (
-    <header className="border-sand-200/80 bg-sand-50/85 sticky top-0 z-40 border-b backdrop-blur">
+    <header className="border-noite-800/80 bg-noite-950/85 sticky top-0 z-40 border-b backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link
           href="/"
-          className="focus-visible:outline-brand-500 rounded focus-visible:outline-2 focus-visible:outline-offset-4"
+          className="focus-visible:outline-ouro-400 rounded focus-visible:outline-2 focus-visible:outline-offset-4"
         >
-          <span className="font-display text-brand-900 text-lg font-semibold">
+          <span className="font-display text-noite-50 text-lg font-semibold">
             Cláudio
           </span>
-          <span className="text-brand-500 font-display text-lg font-semibold">
+          <span className="text-ouro-400 font-display text-lg font-semibold">
             {" "}
             Corretor
           </span>
@@ -29,7 +29,7 @@ export function Header() {
         <nav className="flex items-center gap-1 sm:gap-2">
           <Link
             href="/imoveis"
-            className="text-sand-700 hover:bg-sand-100 hover:text-brand-900 focus-visible:outline-brand-500 rounded-[length:var(--radius-pill)] px-3 py-2 font-sans text-sm font-medium transition-colors focus-visible:outline-2"
+            className="text-noite-300 hover:bg-noite-900 hover:text-noite-50 focus-visible:outline-ouro-400 rounded-[length:var(--radius-pill)] px-3 py-2 font-sans text-sm font-medium transition-colors focus-visible:outline-2"
           >
             Imóveis
           </Link>

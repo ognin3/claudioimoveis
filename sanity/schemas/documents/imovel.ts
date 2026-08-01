@@ -94,17 +94,21 @@ export const imovel = defineType({
       validation: (regra) => regra.required(),
     }),
     defineField({
-      name: "endereco",
-      title: "Endereço",
-      type: "string",
+      name: "locais",
+      title: "Endereços",
+      type: "array",
       group: "principal",
-      description: 'Ex.: "Rua Carlos Laert, 35 — Vila Nova, Nova Iguaçu - RJ".',
+      of: [defineArrayMember({ type: "local" })],
+      description:
+        "O endereço do empreendimento e, quando houver, o do stand de vendas — " +
+        "eles quase nunca são o mesmo lugar durante a obra.",
     }),
     defineField({
       name: "coordenadas",
-      title: "Localização no mapa",
+      title: "Ponto no mapa",
       type: "geopoint",
       group: "principal",
+      description: "Onde o alfinete cai no mapa da página do imóvel.",
     }),
 
     // --- Textos ------------------------------------------------------------

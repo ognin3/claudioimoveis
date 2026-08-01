@@ -59,7 +59,7 @@ export function GaleriaImovel({
         className="max-w-5xl bg-transparent shadow-none"
       >
         {ampliada !== null && (
-          <div className="bg-brand-950 relative aspect-[16/10] w-full overflow-hidden rounded-[length:var(--radius-card)]">
+          <div className="bg-noite-950 relative aspect-[16/10] w-full overflow-hidden rounded-[length:var(--radius-card)]">
             <Image
               src={imagens[ampliada].url}
               alt={imagens[ampliada].alt ?? nome}

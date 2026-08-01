@@ -20,31 +20,31 @@ const PALETA = [
   {
     familia: "brand",
     tons: [
-      { nome: "brand-100", classe: "bg-brand-100" },
-      { nome: "brand-300", classe: "bg-brand-300" },
-      { nome: "brand-500", classe: "bg-brand-500" },
-      { nome: "brand-700", classe: "bg-brand-700" },
-      { nome: "brand-900", classe: "bg-brand-900" },
+      { nome: "brand-100", classe: "bg-ouro-900" },
+      { nome: "brand-300", classe: "bg-ouro-300" },
+      { nome: "brand-500", classe: "bg-ouro-400" },
+      { nome: "brand-700", classe: "bg-ouro-600" },
+      { nome: "brand-900", classe: "bg-noite-900" },
     ],
   },
   {
     familia: "accent",
     tons: [
-      { nome: "accent-100", classe: "bg-accent-100" },
-      { nome: "accent-300", classe: "bg-accent-300" },
-      { nome: "accent-500", classe: "bg-accent-500" },
-      { nome: "accent-700", classe: "bg-accent-700" },
-      { nome: "accent-900", classe: "bg-accent-900" },
+      { nome: "accent-100", classe: "bg-ouro-100" },
+      { nome: "accent-300", classe: "bg-ouro-300" },
+      { nome: "accent-500", classe: "bg-ouro-500" },
+      { nome: "accent-700", classe: "bg-ouro-700" },
+      { nome: "accent-900", classe: "bg-ouro-900" },
     ],
   },
   {
     familia: "sand",
     tons: [
-      { nome: "sand-100", classe: "bg-sand-100" },
-      { nome: "sand-300", classe: "bg-sand-300" },
-      { nome: "sand-500", classe: "bg-sand-500" },
-      { nome: "sand-700", classe: "bg-sand-700" },
-      { nome: "sand-900", classe: "bg-sand-900" },
+      { nome: "noite-900", classe: "bg-noite-900" },
+      { nome: "noite-700", classe: "bg-noite-700" },
+      { nome: "noite-500", classe: "bg-noite-500" },
+      { nome: "noite-300", classe: "bg-noite-300" },
+      { nome: "noite-100", classe: "bg-noite-100" },
     ],
   },
 ] as const;
@@ -64,13 +64,13 @@ export function VitrineUI() {
   return (
     <div className="mx-auto max-w-4xl px-6 py-16">
       <header className="mb-14">
-        <p className="text-accent-600 font-sans text-xs font-semibold tracking-[0.2em] uppercase">
+        <p className="text-ouro-400 font-sans text-xs font-semibold tracking-[0.2em] uppercase">
           Fase 2 · uso interno
         </p>
-        <h1 className="text-brand-900 mt-3 text-[length:var(--text-h1)] font-semibold">
+        <h1 className="text-noite-50 mt-3 text-[length:var(--text-h1)] font-semibold">
           Design system
         </h1>
-        <p className="text-sand-600 mt-3 max-w-xl">
+        <p className="text-noite-400 mt-3 max-w-xl">
           Vitrine dos primitivos. Esta rota é <code>noindex</code> e sai do ar antes do
           lançamento.
         </p>
@@ -129,7 +129,7 @@ export function VitrineUI() {
             </ChipToggle>
           ))}
         </div>
-        <p className="text-sand-500 mt-3 font-sans text-sm">
+        <p className="text-noite-500 mt-3 font-sans text-sm">
           Selecionado: {quartos.length ? descreverQuartos(quartos) : "nada"}
         </p>
 
@@ -143,7 +143,7 @@ export function VitrineUI() {
             <button
               type="button"
               onClick={() => setChips(["Porto Maravilha", "Em obras"])}
-              className="text-brand-600 font-sans text-sm underline"
+              className="text-ouro-400 font-sans text-sm underline"
             >
               restaurar
             </button>
@@ -209,7 +209,7 @@ export function VitrineUI() {
               <Badge>Cury</Badge>
               <Badge>São Cristóvão</Badge>
             </div>
-            <p className="text-sand-700 mt-4">
+            <p className="text-noite-300 mt-4">
               Na Fase 5 este mesmo conteúdo aparece como página dedicada em{" "}
               <code>/imovel/[slug]</code> e como este pop-out quando aberto a partir do
               catálogo — sem recarregar a página.
@@ -227,7 +227,7 @@ export function VitrineUI() {
             </Button>
           }
         >
-          <p className="text-sand-800 font-sans text-sm font-medium">Quartos</p>
+          <p className="text-noite-200 font-sans text-sm font-medium">Quartos</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {[0, 1, 2, 3].map((q) => (
               <ChipToggle
@@ -239,7 +239,7 @@ export function VitrineUI() {
               </ChipToggle>
             ))}
           </div>
-          <p className="text-sand-800 mt-6 font-sans text-sm font-medium">Status</p>
+          <p className="text-noite-200 mt-6 font-sans text-sm font-medium">Status</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {STATUS.map((s) => (
               <ChipToggle key={s} ativo={s === "obras"}>
@@ -268,10 +268,10 @@ export function VitrineUI() {
               key={tom}
               className={`font-display grid aspect-[16/10] place-items-center text-3xl text-white ${
                 tom === "brand"
-                  ? "bg-brand-700"
+                  ? "bg-ouro-600"
                   : tom === "accent"
-                    ? "bg-accent-500"
-                    : "bg-sand-500"
+                    ? "bg-ouro-500"
+                    : "bg-noite-500"
               }`}
             >
               Foto {i + 1}
@@ -302,11 +302,11 @@ export function VitrineUI() {
         <div className="grid gap-4 sm:grid-cols-3">
           {[0, 1, 2].map((i) => (
             <ScrollReveal key={i} atraso={i * 90}>
-              <div className="rounded-[length:var(--radius-card)] bg-white p-6 shadow-[var(--shadow-card)]">
-                <p className="font-display text-brand-900 text-lg font-semibold">
+              <div className="bg-noite-900 rounded-[length:var(--radius-card)] p-6 shadow-[var(--shadow-card)]">
+                <p className="font-display text-noite-50 text-lg font-semibold">
                   Bloco {i + 1}
                 </p>
-                <p className="text-sand-600 mt-1 text-sm">
+                <p className="text-noite-400 mt-1 text-sm">
                   Revelado com {i * 90}ms de atraso.
                 </p>
               </div>
@@ -320,19 +320,19 @@ export function VitrineUI() {
         nota="Fraunces no display, Inter no corpo. Escala fluida com clamp()."
       >
         <div className="space-y-3">
-          <p className="text-brand-900 text-[length:var(--text-display)] leading-[1.05] font-semibold">
+          <p className="text-noite-50 text-[length:var(--text-display)] leading-[1.05] font-semibold">
             Display
           </p>
-          <p className="text-brand-900 text-[length:var(--text-h1)] font-semibold">
+          <p className="text-noite-50 text-[length:var(--text-h1)] font-semibold">
             Título de página
           </p>
-          <p className="text-brand-900 text-[length:var(--text-h2)] font-semibold">
+          <p className="text-noite-50 text-[length:var(--text-h2)] font-semibold">
             Título de seção
           </p>
-          <p className="text-brand-900 text-[length:var(--text-h3)] font-semibold">
+          <p className="text-noite-50 text-[length:var(--text-h3)] font-semibold">
             Título de card
           </p>
-          <p className="text-sand-700 max-w-prose">
+          <p className="text-noite-300 max-w-prose">
             Corpo de texto em Inter. A escala responde à largura da tela sem media query —
             no celular o display encolhe para 2,25rem e no desktop chega a 4,5rem.
           </p>
@@ -345,7 +345,7 @@ export function VitrineUI() {
         <div className="space-y-4">
           {PALETA.map(({ familia, tons }) => (
             <div key={familia}>
-              <p className="text-sand-700 mb-1.5 font-sans text-sm font-medium">
+              <p className="text-noite-300 mb-1.5 font-sans text-sm font-medium">
                 {familia}
               </p>
               <div className="flex overflow-hidden rounded-lg">
@@ -371,11 +371,11 @@ function Secao({
   children: React.ReactNode;
 }) {
   return (
-    <section className="border-sand-200 mb-14 border-t pt-8">
-      <h2 className="text-brand-900 text-[length:var(--text-h3)] font-semibold">
+    <section className="border-noite-800 mb-14 border-t pt-8">
+      <h2 className="text-noite-50 text-[length:var(--text-h3)] font-semibold">
         {titulo}
       </h2>
-      {nota && <p className="text-sand-500 mt-1 mb-5 font-sans text-sm">{nota}</p>}
+      {nota && <p className="text-noite-500 mt-1 mb-5 font-sans text-sm">{nota}</p>}
       {!nota && <div className="mb-5" />}
       {children}
     </section>

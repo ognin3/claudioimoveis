@@ -19,13 +19,19 @@ const base =
   "focus-visible:outline-2 focus-visible:outline-offset-2";
 
 const variants: Record<ButtonVariant, string> = {
-  primary: "bg-brand-800 text-white hover:bg-brand-900 focus-visible:outline-brand-800",
-  accent: "bg-accent-500 text-white hover:bg-accent-600 focus-visible:outline-accent-600",
+  // Ouro com texto ESCURO. Texto branco sobre dourado nao passa em contraste AA
+  // e ainda por cima "suja" o dourado; o preto quente e o que da o ar caro.
+  primary: "bg-ouro-400 text-noite-950 hover:bg-ouro-300 focus-visible:outline-ouro-400",
+  // Secundario: contorno dourado sobre transparente, para dois CTAs lado a lado
+  // nao brigarem entre si.
+  accent:
+    "border border-ouro-500/60 bg-ouro-950/40 text-ouro-200 hover:border-ouro-400 hover:bg-ouro-900/50 focus-visible:outline-ouro-400",
   whatsapp:
-    "bg-whatsapp text-white hover:bg-whatsapp-dark focus-visible:outline-whatsapp-dark",
+    "bg-whatsapp text-noite-950 hover:bg-whatsapp-dark hover:text-white focus-visible:outline-whatsapp",
   outline:
-    "border border-sand-300 bg-transparent text-sand-800 hover:bg-sand-100 focus-visible:outline-brand-500",
-  ghost: "bg-transparent text-sand-700 hover:bg-sand-100 focus-visible:outline-brand-500",
+    "border border-noite-700 bg-transparent text-noite-200 hover:border-noite-600 hover:bg-noite-800 focus-visible:outline-ouro-400",
+  ghost:
+    "bg-transparent text-noite-300 hover:bg-noite-800 focus-visible:outline-ouro-400",
 };
 
 const sizes: Record<ButtonSize, string> = {

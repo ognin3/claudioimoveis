@@ -48,7 +48,9 @@ Antes de qualquer página. Design impecável começa por tokens consistentes, n�
 
 1. Tokens em CSS vars: paleta, tipografia, espaçamento, raios, sombras, `z-index`.
    Direção: sofisticado e confiável — imobiliário de alto padrão, não "panfleto de MCMV".
-   Neutros quentes + um acento forte para CTA. Dark mode **não** é prioridade.
+   **Tema escuro por padrão, e só ele** — decidido pelo cliente em 29/07/2026.
+   Preto quente + dourado; nunca cinza puro nem preto puro. Não existe tema claro
+   nem alternador: manter os dois dobraria a superfície de bug de contraste.
 2. Primitivos em `components/ui`: `Button`, `Badge`, `Dialog`, `Select`, `Sheet`, `Input`,
    `Skeleton`, `Chip`, `Carousel`.
 3. Padrões de movimento: `ScrollReveal` (IntersectionObserver, ~1 KB), transições de imagem,

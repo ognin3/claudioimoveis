@@ -50,8 +50,9 @@ export const queryImoveisDestaque = defineQuery(/* groq */ `
 export const queryImovel = defineQuery(/* groq */ `
   *[_type == "imovel" && publicado == true && slug.current == $slug][0] {
     ${camposCard},
-    endereco,
+    "locais": locais[] { tipo, endereco, waze, googleMaps },
     coordenadas,
+    "textoRegiao": regiao->descricao,
     descricao,
     diferenciais,
     textoLegal,

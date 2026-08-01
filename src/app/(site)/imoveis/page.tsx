@@ -36,7 +36,7 @@ export default async function PaginaImoveis() {
 function EsqueletoCatalogo() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <div className="bg-sand-200/70 h-9 w-64 animate-pulse rounded-lg" />
+      <div className="bg-noite-800/70 h-9 w-64 animate-pulse rounded-lg" />
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
           <SkeletonCardImovel key={i} />

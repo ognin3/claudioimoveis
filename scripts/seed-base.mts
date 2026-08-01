@@ -79,7 +79,19 @@ const regioes = [
   { slug: "niteroi", nome: "Niterói", zona: "niteroi" },
 
   // Baixada — entrada dos lancamentos de JV e Direcional
-  { slug: "nova-iguacu", nome: "Nova Iguaçu", zona: "baixada-fluminense" },
+  {
+    slug: "nova-iguacu",
+    nome: "Nova Iguaçu",
+    zona: "baixada-fluminense",
+    // Texto original. Copiar o da construtora geraria conteudo duplicado.
+    descricao:
+      "Nova Iguaçu concentra hoje boa parte dos lançamentos do Minha Casa Minha " +
+      "Vida na Baixada, e por um motivo prático: é onde o metro quadrado ainda " +
+      "cabe no orçamento de quem sai do aluguel sem abrir mão de lazer completo. " +
+      "A cidade tem malha ferroviária ligando ao Centro do Rio, comércio próprio " +
+      "no centro, shoppings, universidades e hospitais — dá para viver ali sem " +
+      "depender da capital no dia a dia.",
+  },
 ];
 
 async function main() {
@@ -101,6 +113,8 @@ async function main() {
       nome: r.nome,
       zona: r.zona,
       slug: { _type: "slug", current: r.slug },
+      // `descricao` e opcional: a maioria das regioes ainda nao tem texto.
+      ...("descricao" in r ? { descricao: r.descricao } : {}),
     });
   }
 

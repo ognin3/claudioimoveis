@@ -22,11 +22,11 @@ export function Input({
       aria-invalid={invalido || undefined}
       className={cn(
         // h-12: campo confortavel no mobile, que e de onde vem o trafego do Meta.
-        "text-sand-900 h-12 w-full rounded-xl bg-white px-4 font-sans text-base",
-        "ring-sand-300 ring-1 transition-shadow ring-inset",
-        "placeholder:text-sand-400",
-        "focus:ring-brand-500 focus:ring-2 focus:outline-none",
-        invalido && "ring-accent-500 focus:ring-accent-600",
+        "text-noite-100 bg-noite-900 h-12 w-full rounded-xl px-4 font-sans text-base",
+        "ring-noite-700 ring-1 transition-shadow ring-inset",
+        "placeholder:text-noite-400",
+        "focus:ring-ouro-400 focus:ring-2 focus:outline-none",
+        invalido && "ring-ouro-500 focus:ring-ouro-400",
         className,
       )}
       {...props}
@@ -54,10 +54,10 @@ export function InputField({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-sand-800 font-sans text-sm font-medium">
+      <label htmlFor={id} className="text-noite-200 font-sans text-sm font-medium">
         {label}
         {required && (
-          <span className="text-accent-600 ml-0.5" aria-hidden>
+          <span className="text-ouro-400 ml-0.5" aria-hidden>
             *
           </span>
         )}
@@ -77,7 +77,7 @@ export function InputField({
           id={descricaoId}
           // aria-live: o erro vindo da Server Action e anunciado sem precisar refocar.
           aria-live={erro ? "polite" : undefined}
-          className={cn("font-sans text-sm", erro ? "text-accent-700" : "text-sand-500")}
+          className={cn("font-sans text-sm", erro ? "text-ouro-300" : "text-noite-500")}
         >
           {erro ?? dica}
         </p>

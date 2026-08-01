@@ -52,8 +52,8 @@ export function Badge({
   return (
     <span
       className={cn(
-        "bg-sand-100 inline-flex items-center rounded-[length:var(--radius-pill)] px-2.5 py-1",
-        "text-sand-700 ring-sand-200 font-sans text-xs font-medium ring-1 ring-inset",
+        "bg-noite-900 inline-flex items-center rounded-[length:var(--radius-pill)] px-2.5 py-1",
+        "text-noite-300 ring-noite-800 font-sans text-xs font-medium ring-1 ring-inset",
         className,
       )}
     >

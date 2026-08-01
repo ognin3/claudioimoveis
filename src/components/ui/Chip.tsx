@@ -22,8 +22,8 @@ export function Chip({
   return (
     <span
       className={cn(
-        "bg-brand-50 inline-flex items-center gap-1 rounded-[length:var(--radius-pill)] py-1 pr-1 pl-3",
-        "text-brand-800 ring-brand-100 font-sans text-sm font-medium ring-1 ring-inset",
+        "bg-ouro-950/60 inline-flex items-center gap-1 rounded-[length:var(--radius-pill)] py-1 pr-1 pl-3",
+        "text-ouro-300 ring-ouro-800 font-sans text-sm font-medium ring-1 ring-inset",
         className,
       )}
     >
@@ -36,7 +36,7 @@ export function Chip({
           // de um chip de filtro ficaria maior que o proprio chip. Atende o
           // minimo de 24px do WCAG 2.5.8 (AA), e o chip nunca e a unica forma de
           // limpar o filtro — sempre existe "Limpar filtros" ao lado.
-          className="text-brand-600 hover:bg-brand-100 hover:text-brand-900 grid size-7 shrink-0 place-items-center rounded-full transition-colors"
+          className="text-ouro-400 hover:bg-ouro-900 hover:text-noite-50 grid size-7 shrink-0 place-items-center rounded-full transition-colors"
         >
           <X className="size-3.5" aria-hidden />
           <span className="sr-only">Remover filtro</span>
@@ -66,8 +66,8 @@ export function ChipToggle({
         "font-sans text-sm font-medium whitespace-nowrap transition-colors",
         "ring-1 ring-inset",
         ativo
-          ? "bg-brand-800 ring-brand-800 text-white"
-          : "text-sand-700 ring-sand-300 hover:bg-sand-100 bg-white",
+          ? "bg-ouro-400 ring-ouro-400 text-noite-950"
+          : "text-noite-300 ring-noite-700 hover:bg-noite-800 bg-noite-900",
         className,
       )}
       {...props}
