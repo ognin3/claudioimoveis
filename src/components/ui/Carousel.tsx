@@ -101,7 +101,7 @@ export function Carousel({
                 key={i}
                 aria-hidden
                 className={cn(
-                  "h-1.5 rounded-full transition-all duration-200",
+                  "h-1.5 rounded-full transition-[width,background-color] duration-200",
                   i === indice ? "bg-noite-900 w-5" : "bg-noite-900/50 w-1.5",
                 )}
               />
@@ -137,7 +137,7 @@ function BotaoNavegacao({
       className={cn(
         "absolute top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full",
         "text-noite-100 bg-noite-900/80 ring-noite-700 shadow-[var(--shadow-card)] ring-1 backdrop-blur",
-        "hover:bg-noite-700 transition-all disabled:pointer-events-none disabled:opacity-0",
+        "hover:bg-noite-700 transition-[transform,background-color,opacity] duration-[var(--duration-fast)] ease-[var(--ease-smooth-out)] hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-0",
         lado === "anterior" ? "left-3" : "right-3",
       )}
     >

@@ -14,7 +14,7 @@ export type ButtonSize = "sm" | "md" | "lg";
 
 const base =
   "inline-flex items-center justify-center gap-2 rounded-[length:var(--radius-pill)] " +
-  "font-sans font-semibold whitespace-nowrap transition-colors duration-150 " +
+  "font-sans font-semibold whitespace-nowrap motion-button " +
   "disabled:pointer-events-none disabled:opacity-50 " +
   "focus-visible:outline-2 focus-visible:outline-offset-2";
 

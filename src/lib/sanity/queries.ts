@@ -45,7 +45,8 @@ export const queryImoveis = defineQuery(/* groq */ `
 export const queryImoveisDestaque = defineQuery(/* groq */ `
   *[_type == "imovel" && publicado == true && status == "lancamento"]
   | order(_createdAt desc, ordem asc, nome asc) [0...6] {
-    ${camposCard}
+    ${camposCard},
+    "imagemHero": coalesce(galeria[0], capa) ${camposImagem}
   }
 `);
 

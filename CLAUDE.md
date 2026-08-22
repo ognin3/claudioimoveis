@@ -295,7 +295,7 @@ Para editar arquivo de env por script, use `[System.IO.File]::WriteAllText` com
 
 Táticas: catálogo filtra **client-side sobre payload enxuto** (~4 KB gzip) — zero request por
 filtro; `next/font` local com subset latin; Pixel deferido para idle; imagem LCP com
-`priority` + `fetchPriority="high"`; `sizes` correto em toda imagem; sem layout shift em card
+`loading="eager"` + `fetchPriority="high"`; `sizes` correto em toda imagem; sem layout shift em card
 (aspect-ratio fixo + LQIP blur).
 
 ---
@@ -335,6 +335,11 @@ Atualizado em **22/08/2026**.
   15 páginas regionais, galeria, plantas, mapa, política de privacidade e Studio Sanity.
 - A home exibe automaticamente os **6 lançamentos mais recentes**; todas as plantas abrem
   em visualização ampliada acessível, tanto no desktop quanto no celular.
+- Movimento visual aplicado com CSS + `IntersectionObserver`: hero em camadas, entradas por
+  rolagem, cards e CTAs com resposta física, setas e overlays refinados. Tudo respeita
+  `prefers-reduced-motion`, sem biblioteca de animação no caminho crítico.
+- Imagens corrigidas para alta fidelidade: hero usa foto horizontal 1440×900, cards preservam
+  as capas de campanha em proporção 16:9 e o CDN entrega qualidade 80/90 com `sizes` ajustado.
 - **40 imóveis publicados** no Sanity e **71 rotas** geradas no build de produção.
 - Correção aplicada no link esticado dos cards: filtros do catálogo não abrem mais imóveis.
 - Funil de lead concluído: formulário curto na home e em cada imóvel → grava no Sanity →

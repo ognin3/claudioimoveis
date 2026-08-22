@@ -8,6 +8,7 @@ import { Button, buttonClasses } from "@/components/ui/Button";
 import { Chip, ChipToggle } from "@/components/ui/Chip";
 import { Select } from "@/components/ui/Select";
 import { Sheet } from "@/components/ui/Sheet";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { CardImovel } from "@/components/imovel/CardImovel";
 import { rotuloStatus, type StatusImovel } from "@/components/ui/Badge";
 import { linkWhatsApp } from "@/lib/whatsapp";
@@ -295,12 +296,13 @@ export function Catalogo({
             <>
               <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {resultados.slice(0, visiveis).map((imovel, i) => (
-                  <CardImovel
+                  <ScrollReveal
                     key={imovel.id}
-                    imovel={imovel}
-                    prioridade={i === 0}
-                    nivelTitulo="h2"
-                  />
+                    atraso={(i % 3) * 40}
+                    className="h-full [&>article]:h-full"
+                  >
+                    <CardImovel imovel={imovel} prioridade={i === 0} nivelTitulo="h2" />
+                  </ScrollReveal>
                 ))}
               </div>
 

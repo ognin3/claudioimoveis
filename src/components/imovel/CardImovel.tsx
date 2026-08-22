@@ -18,7 +18,7 @@ import type { CardImovel as TipoCard } from "@/types/imovel";
  * O CTA de WhatsApp fica DENTRO do card: no portal e o que mais converte, porque
  * quem ja se decidiu pela foto nao precisa abrir a pagina inteira para falar.
  *
- * `aspect-[4/3]` fixo + `blurDataURL` do LQIP: a altura e conhecida antes da
+ * `aspect-video` fixo + `blurDataURL` do LQIP: a altura e conhecida antes da
  * imagem chegar, entao a grade nao pula quando as fotos carregam (meta de CLS).
  */
 export function CardImovel({
@@ -43,24 +43,25 @@ export function CardImovel({
   const vagas = imovel.vagasMax ?? null;
 
   return (
-    <article className="group border-noite-800 bg-noite-900 hover:border-noite-700 relative flex flex-col overflow-hidden rounded-[length:var(--radius-card)] border transition-colors">
+    <article className="motion-card group border-noite-800 bg-noite-900 hover:border-ouro-800/70 relative flex flex-col overflow-hidden rounded-[length:var(--radius-card)] border">
       {/* A foto inteira e link: e o alvo natural de clique num catalogo. */}
       <Link
         href={`/imovel/${imovel.slug}`}
         tabIndex={-1}
         aria-hidden
-        className="relative block aspect-[4/3] overflow-hidden"
+        className="relative block aspect-video overflow-hidden"
       >
         <Image
           src={imovel.capa.url}
           alt=""
           fill
-          sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 100vw"
+          sizes="(min-width: 1024px) 640px, (min-width: 640px) 80vw, 140vw"
           placeholder={imovel.capa.lqip ? "blur" : "empty"}
           blurDataURL={imovel.capa.lqip ?? undefined}
-          priority={prioridade}
-          quality={55}
-          className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
+          loading={prioridade ? "eager" : "lazy"}
+          fetchPriority={prioridade ? "high" : undefined}
+          quality={80}
+          className="motion-card-image object-cover"
         />
 
         <div className="absolute top-3 left-3">

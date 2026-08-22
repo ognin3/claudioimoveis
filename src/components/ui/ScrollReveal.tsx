@@ -24,15 +24,19 @@ export function ScrollReveal({
   children,
   atraso = 0,
   className,
+  as: Componente = "div",
+  variante = "subir",
 }: {
   children: React.ReactNode;
   /** Escalonamento em ms, para revelar cards de uma grade em cascata. */
   atraso?: number;
   className?: string;
+  as?: "div" | "li";
+  variante?: "subir" | "esquerda" | "escala";
 }) {
   const [animar, setAnimar] = useState(false);
 
-  const observarRef = useCallback((elemento: HTMLDivElement | null) => {
+  const observarRef = useCallback((elemento: HTMLElement | null) => {
     if (!elemento) return;
 
     // Quem pediu menos movimento nao recebe animacao nenhuma.
@@ -54,17 +58,14 @@ export function ScrollReveal({
   }, []);
 
   return (
-    <div
+    <Componente
       ref={observarRef}
       // `backwards` em vez de `both`: a animacao aplica o quadro inicial so
       // durante o atraso, e o elemento volta ao estado natural (visivel) ao fim.
-      className={cn(
-        animar && "motion-safe:animate-[revelar_600ms_ease-out_backwards]",
-        className,
-      )}
+      className={cn(animar && `motion-reveal motion-reveal--${variante}`, className)}
       style={animar && atraso ? { animationDelay: `${atraso}ms` } : undefined}
     >
       {children}
-    </div>
+    </Componente>
   );
 }

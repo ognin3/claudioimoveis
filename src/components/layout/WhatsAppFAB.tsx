@@ -14,7 +14,7 @@ export function WhatsAppFAB() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Falar com o Cláudio no WhatsApp"
-      className="bg-whatsapp hover:bg-whatsapp-dark focus-visible:outline-whatsapp-dark fixed right-4 bottom-4 z-30 grid size-14 place-items-center rounded-full text-white shadow-[var(--shadow-lift)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:right-6 sm:bottom-6"
+      className="whatsapp-fab bg-whatsapp hover:bg-whatsapp-dark focus-visible:outline-whatsapp-dark fixed right-4 bottom-4 z-30 grid size-14 place-items-center rounded-full text-white shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 sm:right-6 sm:bottom-6"
     >
       {/* Glifo oficial do WhatsApp — o lucide nao traz marcas registradas. */}
       <svg viewBox="0 0 24 24" className="size-7" fill="currentColor" aria-hidden>

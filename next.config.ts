@@ -9,12 +9,14 @@ const nextConfig: NextConfig = {
   images: {
     // AVIF primeiro: os renders dos books e as fotos da Cury sao pesados.
     formats: ["image/avif", "image/webp"],
-    qualities: [45, 55, 75],
+    // Fotografia imobiliaria perde muito detalhe abaixo de 75. Os cards e o hero
+    // usam 80; galerias e plantas ampliadas usam 90.
+    qualities: [75, 80, 90],
     loader: "custom",
     loaderFile: "./src/lib/sanity/image-loader.ts",
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
     // Larguras alinhadas aos breakpoints do catalogo, evita gerar variantes inuteis.
-    deviceSizes: [360, 480, 640, 828, 1080, 1280, 1920],
+    deviceSizes: [360, 480, 640, 828, 1080, 1280, 1440, 1920],
     imageSizes: [64, 96, 128, 256, 384],
   },
 

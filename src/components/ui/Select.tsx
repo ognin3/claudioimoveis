@@ -51,7 +51,7 @@ export function Select({
         <RadixSelect.Content
           position="popper"
           sideOffset={6}
-          className="ring-noite-800 bg-noite-900 z-50 max-h-72 min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-xl shadow-[var(--shadow-lift)] ring-1 motion-safe:data-[state=open]:animate-[fade-in_140ms_ease-out]"
+          className="motion-select-enter ring-noite-800 bg-noite-900 z-50 max-h-72 min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-xl shadow-[var(--shadow-lift)] ring-1"
         >
           <RadixSelect.Viewport className="p-1.5">
             {opcoes.map((opcao) => (

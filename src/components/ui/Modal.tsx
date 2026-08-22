@@ -42,7 +42,7 @@ export function Modal({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm motion-safe:data-[state=open]:animate-[fade-in_200ms_ease-out]" />
+        <Dialog.Overlay className="motion-overlay-enter fixed inset-0 z-50 bg-black/70 backdrop-blur-sm" />
 
         <Dialog.Content
           className={cn(
@@ -50,7 +50,7 @@ export function Modal({
             "max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain",
             "bg-noite-950 rounded-[length:var(--radius-card)] shadow-[var(--shadow-lift)]",
             "focus:outline-none",
-            "motion-safe:data-[state=open]:animate-[modal-in_220ms_ease-out]",
+            "motion-modal-enter",
             className,
           )}
         >

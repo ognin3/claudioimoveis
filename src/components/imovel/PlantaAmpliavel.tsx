@@ -36,6 +36,7 @@ export function PlantaAmpliavel({
           alt={alt}
           fill
           sizes="(min-width: 640px) 33vw, 50vw"
+          quality={90}
           placeholder={imagem.lqip ? "blur" : "empty"}
           blurDataURL={imagem.lqip ?? undefined}
           className="object-contain transition-transform duration-300 motion-safe:group-hover:scale-[1.03]"
@@ -63,6 +64,7 @@ export function PlantaAmpliavel({
             alt={alt}
             fill
             sizes="100vw"
+            quality={90}
             className="object-contain"
           />
         </div>

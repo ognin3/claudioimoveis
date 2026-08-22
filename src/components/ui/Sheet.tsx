@@ -31,7 +31,7 @@ export function Sheet({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/70 motion-safe:data-[state=open]:animate-[fade-in_200ms_ease-out]" />
+        <Dialog.Overlay className="motion-overlay-enter fixed inset-0 z-50 bg-black/70" />
 
         <Dialog.Content
           className={cn(
@@ -41,7 +41,7 @@ export function Sheet({
             // Sem animacao de saida — mesma razao do Modal. Ver CLAUDE.md 5.8.
             // `motion-safe:` e obrigatorio aqui: a entrada parte de translateY(100%),
             // entao se a animacao nao progredir o painel fica FORA da tela.
-            "motion-safe:data-[state=open]:animate-[sheet-up_260ms_cubic-bezier(0.32,0.72,0,1)]",
+            "motion-sheet-enter",
             className,
           )}
         >

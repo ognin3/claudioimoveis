@@ -19,7 +19,15 @@ export function GaleriaImovel({
   galeria: ImagemSanity[];
   nome: string;
 }) {
-  const imagens = [capa, ...galeria];
+  // Algumas construtoras entregam a "capa" como banner 1440x500. Ela funciona
+  // em mídia, mas fica estourada dentro de uma galeria 16:10. Nesses casos a
+  // primeira foto horizontal da galeria assume a abertura, e o banner continua
+  // disponível no fim da sequência.
+  const capaPanoramica = (capa.aspecto ?? 0) > 2.1;
+  const imagens = (capaPanoramica ? [...galeria, capa] : [capa, ...galeria]).filter(
+    (imagem, indice, lista) =>
+      lista.findIndex((candidata) => candidata.url === imagem.url) === indice,
+  );
   const [ampliada, setAmpliada] = useState<number | null>(null);
 
   return (
@@ -34,18 +42,19 @@ export function GaleriaImovel({
             type="button"
             onClick={() => setAmpliada(i)}
             aria-label={`Ampliar imagem ${i + 1} de ${imagens.length}`}
-            className="relative block aspect-[16/10] w-full cursor-zoom-in"
+            className="group relative block aspect-[16/10] w-full cursor-zoom-in overflow-hidden"
           >
             <Image
               src={img.url}
               alt={img.alt ?? `${nome} — imagem ${i + 1}`}
               fill
-              sizes="(min-width: 1024px) 1024px, 100vw"
-              priority={i === 0}
+              sizes="(min-width: 1024px) 1152px, 100vw"
+              quality={90}
+              loading={i === 0 ? "eager" : "lazy"}
               fetchPriority={i === 0 ? "high" : undefined}
               placeholder={img.lqip ? "blur" : "empty"}
               blurDataURL={img.lqip ?? undefined}
-              className="object-cover"
+              className="motion-gallery-image object-cover"
             />
           </button>
         ))}
@@ -65,6 +74,7 @@ export function GaleriaImovel({
               alt={imagens[ampliada].alt ?? nome}
               fill
               sizes="100vw"
+              quality={90}
               className="object-contain"
             />
           </div>

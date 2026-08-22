@@ -55,6 +55,8 @@ export type CardImovel = {
   /** Quantas fotos a galeria tem — vira o selo de contagem sobre a capa. */
   totalFotos: number | null;
   capa: ImagemSanity;
+  /** Foto horizontal usada apenas no hero quando a capa original é panorâmica demais. */
+  imagemHero?: ImagemSanity | null;
 };
 
 export type Tipologia = {

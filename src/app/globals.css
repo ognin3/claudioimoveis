@@ -50,7 +50,7 @@
 
   /* Tipografia — variaveis preenchidas pelo next/font no layout raiz. */
   --font-display: var(--font-fraunces), Georgia, serif;
-  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
 
   /* Escala fluida: acompanha a viewport sem media query e sem estourar no mobile. */
   --text-display: clamp(2.25rem, 1.6rem + 3.2vw, 4.5rem);
@@ -71,6 +71,28 @@
   --spacing-filtros: 4.5rem;
 }
 
+:root {
+  /* Escala compartilhada do transitions.dev. Uso primeiro, numero depois. */
+  --duration-stagger: 40ms;
+  --duration-micro: 80ms;
+  --duration-quick: 150ms;
+  --duration-fast: 250ms;
+  --duration-medium: 350ms;
+  --duration-slow: 400ms;
+  --duration-very-slow: 500ms;
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --distance-medium: 12px;
+  --scale-large: 0.96;
+
+  /* Learn-more hover — receita do transitions.dev/24-learn-more-hover. */
+  --learn-shift: 2px;
+  --learn-spread: 8deg;
+  --learn-in: 350ms;
+  --learn-out: 350ms;
+  --learn-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 @layer base {
   html {
     /* Ancoras nao ficam escondidas atras do header + barra de filtros sticky. */
@@ -78,6 +100,7 @@
     -webkit-text-size-adjust: 100%;
     /* Avisa o navegador: formulario, scrollbar e menus nativos vem escuros. */
     color-scheme: dark;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -123,6 +146,225 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Linguagem de movimento — leve, consistente e segura para o Lighthouse.
+   Entradas rodam uma vez; hovers usam transform/opacity e nunca mudam layout.
+--------------------------------------------------------------------------- */
+
+.site-header {
+  animation: header-in var(--duration-very-slow) var(--ease-smooth-out) backwards;
+}
+
+.motion-hero-ambient {
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-ouro-500) 18%, transparent),
+    transparent 68%
+  );
+  animation: ambient-drift 8s var(--ease-smooth-out) infinite alternate;
+}
+
+.motion-hero-item {
+  animation: hero-copy-in 700ms var(--ease-smooth-out) backwards;
+}
+
+.motion-delay-1 {
+  animation-delay: 80ms;
+}
+
+.motion-delay-2 {
+  animation-delay: 160ms;
+}
+
+.motion-delay-3 {
+  animation-delay: 240ms;
+}
+
+.motion-delay-4 {
+  animation-delay: 320ms;
+}
+
+.motion-delay-5 {
+  animation-delay: 400ms;
+}
+
+.motion-reveal {
+  animation-duration: 700ms;
+  animation-timing-function: var(--ease-smooth-out);
+  animation-fill-mode: backwards;
+}
+
+.motion-reveal--subir {
+  animation-name: revelar;
+}
+
+.motion-reveal--esquerda {
+  animation-name: revelar-esquerda;
+}
+
+.motion-reveal--escala {
+  animation-name: revelar-escala;
+}
+
+.motion-overlay-enter {
+  animation: fade-in var(--duration-quick) var(--ease-smooth-out) backwards;
+}
+
+.motion-modal-enter {
+  animation: modal-in var(--duration-fast) var(--ease-smooth-out) backwards;
+}
+
+.motion-sheet-enter {
+  animation: sheet-up var(--duration-slow) var(--ease-smooth-out) backwards;
+}
+
+.motion-select-enter {
+  transform-origin: var(--radix-select-content-transform-origin);
+  animation: select-in var(--duration-fast) var(--ease-smooth-out) backwards;
+}
+
+.motion-card {
+  transition:
+    transform var(--duration-medium) var(--ease-smooth-out),
+    border-color var(--duration-fast) var(--ease-smooth-out),
+    box-shadow var(--duration-medium) var(--ease-smooth-out);
+}
+
+.motion-card-image,
+.motion-gallery-image {
+  transition: transform 700ms var(--ease-smooth-out);
+}
+
+.motion-button {
+  transition:
+    transform var(--duration-fast) var(--ease-smooth-out),
+    background-color var(--duration-fast) var(--ease-smooth-out),
+    border-color var(--duration-fast) var(--ease-smooth-out),
+    color var(--duration-fast) var(--ease-smooth-out);
+}
+
+.motion-link {
+  transition:
+    transform var(--duration-fast) var(--ease-smooth-out),
+    background-color var(--duration-fast) var(--ease-smooth-out),
+    color var(--duration-fast) var(--ease-smooth-out);
+}
+
+.whatsapp-fab {
+  isolation: isolate;
+  animation: fab-in 600ms var(--ease-bounce) 500ms backwards;
+  transition:
+    transform var(--duration-fast) var(--ease-smooth-out),
+    background-color var(--duration-fast) var(--ease-smooth-out);
+}
+
+.whatsapp-fab::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border: 1px solid color-mix(in srgb, var(--color-whatsapp) 60%, transparent);
+  border-radius: inherit;
+  content: "";
+  animation: fab-pulse 1.4s var(--ease-smooth-out) 1.4s 2;
+}
+
+@media (hover: hover) {
+  .motion-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .motion-card:hover .motion-card-image,
+  .group:hover .motion-gallery-image {
+    transform: scale(1.045);
+  }
+
+  .motion-button:hover,
+  .motion-link:hover {
+    transform: translateY(-2px);
+  }
+
+  .whatsapp-fab:hover {
+    transform: translateY(-3px) scale(1.04);
+  }
+}
+
+.motion-button:active,
+.motion-link:active,
+.whatsapp-fab:active {
+  transform: scale(0.98);
+}
+
+/* Receita literal do transitions.dev/24-learn-more-hover. */
+.t-learn-chevron {
+  display: inline-flex;
+  transform: translateX(0);
+  transition: transform var(--learn-out) var(--learn-ease);
+}
+.t-learn-arm {
+  transform-box: view-box;
+  transform-origin: 10px 8px;
+  vector-effect: non-scaling-stroke;
+  transition: transform var(--learn-out) var(--learn-ease);
+}
+.t-learn:hover .t-learn-chevron {
+  transform: translateX(var(--learn-shift));
+  transition-duration: var(--learn-in);
+}
+.t-learn:hover .t-learn-arm {
+  transition-duration: var(--learn-in);
+}
+.t-learn:hover .t-learn-arm-top {
+  transform: rotate(var(--learn-spread));
+}
+.t-learn:hover .t-learn-arm-bot {
+  transform: rotate(calc(var(--learn-spread) * -1));
+}
+
+@keyframes header-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes ambient-drift {
+  from {
+    opacity: 0.35;
+    transform: translate3d(-2%, 0, 0) scale(0.96);
+  }
+  to {
+    opacity: 0.6;
+    transform: translate3d(4%, -3%, 0) scale(1.05);
+  }
+}
+
+@keyframes hero-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--distance-medium));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fab-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.9);
+  }
+}
+
+@keyframes fab-pulse {
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.55);
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Animacoes dos overlays (Modal, Sheet). Tudo em transform/opacity —
    propriedades que a GPU compoe sem reflow.
 
@@ -145,7 +387,7 @@
 @keyframes modal-in {
   from {
     opacity: 0;
-    transform: translate(-50%, -48%) scale(0.97);
+    transform: translate(-50%, -48%) scale(var(--scale-large));
   }
   to {
     opacity: 1;
@@ -162,15 +404,52 @@
   }
 }
 
+@keyframes select-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 /* Entrada do ScrollReveal. `backwards` no uso: o conteudo NUNCA comeca oculto. */
 @keyframes revelar {
   from {
     opacity: 0;
-    transform: translateY(1rem);
+    filter: blur(3px);
+    transform: translateY(var(--distance-medium));
   }
   to {
     opacity: 1;
+    filter: blur(0);
     transform: none;
+  }
+}
+
+@keyframes revelar-esquerda {
+  from {
+    opacity: 0;
+    filter: blur(3px);
+    transform: translateX(calc(var(--distance-medium) * -1));
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+
+@keyframes revelar-escala {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -183,5 +462,10 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .t-learn-chevron,
+  .t-learn-arm {
+    transition: none !important;
   }
 }
