@@ -8,8 +8,9 @@ import { defineField, defineType } from "sanity";
  * Fica no Studio de proposito: o corretor ganha um CRM basico sem custo extra e
  * sem mais uma ferramenta para aprender.
  *
- * LGPD: sao dados pessoais. Nao adicionar campos alem do necessario para o
- * atendimento, e nao expor este tipo em nenhuma query publica do site.
+ * LGPD: sao dados pessoais. A Server Action sempre cria estes documentos como
+ * drafts, pois o dataset de conteudo e publico. Nao publicar nem expor este tipo
+ * em nenhuma query publica do site.
  */
 export const lead = defineType({
   name: "lead",

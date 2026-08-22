@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Route } from "next";
 import {
   ArrowRight,
+  AtSign,
   BadgeCheck,
   ChevronRight,
   KeyRound,
@@ -15,19 +16,28 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { CardImovel } from "@/components/imovel/CardImovel";
 import { LeadForm } from "@/components/conversao/LeadForm";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { buscarImoveisDestaque, buscarRegioes } from "@/lib/sanity/fetch";
+import {
+  buscarConfiguracoes,
+  buscarImoveisDestaque,
+  buscarRegioes,
+} from "@/lib/sanity/fetch";
 import { linkWhatsApp } from "@/lib/whatsapp";
 import { site } from "@/lib/site";
 
 export default async function Home() {
-  const [destaques, regioes] = await Promise.all([
+  const [destaques, regioes, configuracoes] = await Promise.all([
     buscarImoveisDestaque(),
     buscarRegioes(),
+    buscarConfiguracoes(),
   ]);
 
   const imagemHero = destaques[0]?.imagemHero ?? destaques[0]?.capa;
   const zonas = [...new Set(regioes.map((r) => r.zona))];
   const perguntas = perguntasFrequentes;
+  const regioesDestaque = [...regioes]
+    .sort((a, b) => (b.total ?? 0) - (a.total ?? 0))
+    .slice(0, 6);
+  const fotoClaudio = configuracoes?.fotoCorretor;
 
   return (
     <>
@@ -142,7 +152,7 @@ export default async function Home() {
                 <Faixa numero={String(regioes.length)} rotulo="regiões atendidas" />
               )}
               {zonas.length >= 3 && (
-                <Faixa numero={String(zonas.length)} rotulo="zonas do Grande Rio" />
+                <Faixa numero={String(zonas.length)} rotulo="áreas do Rio e região" />
               )}
             </dl>
           </div>
@@ -187,7 +197,7 @@ export default async function Home() {
           <div>
             <p className="text-ouro-400 flex items-center gap-2 font-sans text-sm font-semibold tracking-[0.14em] uppercase">
               <MapPin className="size-4" aria-hidden />
-              Grande Rio
+              Rio de Janeiro e região
             </p>
             <h2 className="text-noite-50 mt-3 text-[length:var(--text-h2)] font-semibold">
               Encontre imóveis por região
@@ -198,7 +208,7 @@ export default async function Home() {
           </div>
         </ScrollReveal>
         <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {regioes.map((regiao, i) => (
+          {regioesDestaque.map((regiao, i) => (
             <ScrollReveal key={regiao.slug} atraso={(i % 3) * 40} className="h-full">
               <Link
                 href={`/imoveis/${regiao.slug}` as Route}
@@ -221,6 +231,17 @@ export default async function Home() {
             </ScrollReveal>
           ))}
         </div>
+        {regioes.length > regioesDestaque.length ? (
+          <ScrollReveal className="mt-7 flex justify-center">
+            <Link
+              href="/imoveis"
+              className="t-learn text-ouro-400 hover:text-ouro-300 inline-flex items-center gap-2 font-sans text-sm font-semibold"
+            >
+              Ver todas as regiões
+              <SetaAnimada />
+            </Link>
+          </ScrollReveal>
+        ) : null}
       </section>
 
       {/* -------------------------------------------------------- Como funciona */}
@@ -263,18 +284,58 @@ export default async function Home() {
 
       {/* ---------------------------------------------------------------- Sobre */}
       <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-        <div className="grid items-center gap-10 sm:grid-cols-5">
-          <ScrollReveal className="sm:col-span-3" variante="esquerda">
-            <h2 className="text-noite-50 text-[length:var(--text-h2)] font-semibold">
-              Quem vai te atender
-            </h2>
-            <p className="text-noite-300 mt-4 text-lg leading-relaxed">{site.bio}</p>
-            <p className="text-noite-400 mt-4 leading-relaxed">
-              Corretor credenciado ({site.creci}), com atuação nos empreendimentos da
-              Cury, JV, Direcional, Você RJ e Rebouças. O atendimento é direto com ele —
-              sem call center, sem intermediário.
+        <div className="border-noite-800 bg-noite-900 grid overflow-hidden rounded-[1.75rem] border lg:grid-cols-[0.72fr_1.28fr]">
+          <ScrollReveal
+            variante="escala"
+            className="relative min-h-[25rem] lg:min-h-[38rem]"
+          >
+            {fotoClaudio ? (
+              <Image
+                src={fotoClaudio.url}
+                alt="Cláudio, corretor de imóveis no Rio de Janeiro"
+                fill
+                sizes="(min-width: 1024px) 440px, 100vw"
+                quality={90}
+                placeholder={fotoClaudio.lqip ? "blur" : "empty"}
+                blurDataURL={fotoClaudio.lqip ?? undefined}
+                className="object-cover object-top"
+              />
+            ) : (
+              <div className="from-noite-800 to-noite-950 h-full bg-gradient-to-br" />
+            )}
+            <div className="from-noite-950/80 absolute inset-x-0 bottom-0 bg-gradient-to-t to-transparent p-6 pt-24 lg:hidden">
+              <p className="font-display text-noite-50 text-2xl font-semibold">
+                Cláudio Corretor
+              </p>
+              <p className="text-noite-300 mt-1 text-sm">{site.creci}</p>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal
+            className="flex flex-col justify-center p-7 sm:p-10 lg:p-14"
+            atraso={100}
+            variante="esquerda"
+          >
+            <p className="text-ouro-400 font-sans text-sm font-semibold tracking-[0.16em] uppercase">
+              Quem fala com você é quem acompanha sua compra
             </p>
-            <div className="mt-8">
+            <h2 className="mt-4 text-[length:var(--text-h2)] font-semibold">
+              Atendimento direto com o Cláudio
+            </h2>
+            <p className="text-noite-300 mt-5 text-lg leading-relaxed">{site.bio}</p>
+            <p className="text-noite-400 mt-4 leading-relaxed">
+              Corretor credenciado, com atuação nos empreendimentos da Cury, JV,
+              Direcional, Você RJ e Rebouças. Sem call center e sem troca de atendente no
+              meio do caminho.
+            </p>
+
+            <div className="border-noite-800 mt-7 grid gap-4 border-y py-5 sm:grid-cols-3">
+              <SeloConfianca titulo={site.creci} texto="credenciado" />
+              <SeloConfianca titulo="Atendimento direto" texto="do início às chaves" />
+              <SeloConfianca titulo="Sem custo" texto="para o comprador" />
+            </div>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
                 href={linkWhatsApp()}
                 target="_blank"
@@ -284,20 +345,15 @@ export default async function Home() {
                 <MessageCircle className="size-4" aria-hidden />
                 Tirar uma dúvida
               </a>
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal className="sm:col-span-2" atraso={120} variante="escala">
-            <div className="bg-ouro-950 ring-ouro-800 rounded-[length:var(--radius-card)] p-8 ring-1">
-              <BadgeCheck className="text-ouro-400 size-8" aria-hidden />
-              <p className="font-display text-noite-50 mt-4 text-xl leading-snug font-semibold">
-                Assessoria sem custo
-              </p>
-              <p className="text-noite-400 mt-2 text-sm leading-relaxed">
-                A comissão do corretor é paga pela construtora. Você recebe orientação
-                completa sobre subsídio, FGTS e financiamento sem pagar nada a mais por
-                isso.
-              </p>
+              <a
+                href={site.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonClasses("outline", "lg")}
+              >
+                <AtSign className="size-4" aria-hidden />
+                Ver Instagram
+              </a>
             </div>
           </ScrollReveal>
         </div>
@@ -404,6 +460,18 @@ function Faixa({ numero, rotulo }: { numero: string; rotulo: string }) {
     <div className="flex flex-col-reverse">
       <dt className="text-noite-300 mt-0.5 font-sans text-sm">{rotulo}</dt>
       <dd className="font-display text-noite-50 text-2xl font-semibold">{numero}</dd>
+    </div>
+  );
+}
+
+function SeloConfianca({ titulo, texto }: { titulo: string; texto: string }) {
+  return (
+    <div>
+      <div className="flex items-center gap-2">
+        <BadgeCheck className="text-ouro-400 size-4 shrink-0" aria-hidden />
+        <p className="text-noite-100 font-sans text-sm font-semibold">{titulo}</p>
+      </div>
+      <p className="text-noite-500 mt-1 pl-6 font-sans text-xs">{texto}</p>
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, ChevronRight, SlidersHorizontal } from "lucide-react";
 import { Button, buttonClasses } from "@/components/ui/Button";
 import { Chip, ChipToggle } from "@/components/ui/Chip";
 import { Select } from "@/components/ui/Select";
@@ -87,6 +87,15 @@ export function Catalogo({
     return [...mapa.entries()];
   }, [regioes]);
 
+  const regioesPopulares = useMemo(
+    () => [...regioes].sort((a, b) => (b.total ?? 0) - (a.total ?? 0)).slice(0, 4),
+    [regioes],
+  );
+  const regioesPopularesSlugs = new Set(regioesPopulares.map((regiao) => regiao.slug));
+  const regiaoSecundariaSelecionada = filtros.regiao.some(
+    (slug) => !regioesPopularesSlugs.has(slug),
+  );
+
   const qtdFiltros =
     filtros.regiao.length +
     filtros.quartos.length +
@@ -121,40 +130,74 @@ export function Catalogo({
         ))}
       </GrupoFiltro>
 
-      {regioesPorZona.map(([zona, lista]) => (
-        <GrupoFiltro key={zona} titulo={ROTULOS_ZONA[zona] ?? zona}>
-          {lista.map((r) => (
-            <ChipToggle
-              key={r.slug}
-              ativo={filtros.regiao.includes(r.slug)}
-              onClick={() =>
-                navegar({ ...filtros, regiao: alternar(filtros.regiao, r.slug) })
-              }
-            >
-              {r.nome}
-              {r.total ? <span className="ml-1.5 opacity-60">{r.total}</span> : null}
-            </ChipToggle>
+      <GrupoFiltro titulo="Regiões mais procuradas">
+        {regioesPopulares.map((r) => (
+          <ChipToggle
+            key={r.slug}
+            ativo={filtros.regiao.includes(r.slug)}
+            onClick={() =>
+              navegar({ ...filtros, regiao: alternar(filtros.regiao, r.slug) })
+            }
+          >
+            {r.nome}
+            {r.total ? <span className="ml-1.5 opacity-60">{r.total}</span> : null}
+          </ChipToggle>
+        ))}
+      </GrupoFiltro>
+
+      <GrupoFiltroRecolhivel
+        titulo="Todas as regiões"
+        inicialmenteAberto={regiaoSecundariaSelecionada}
+      >
+        <div className="space-y-5 pt-1">
+          {regioesPorZona.map(([zona, lista]) => (
+            <div key={zona}>
+              <p className="text-noite-500 mb-2 font-sans text-xs font-semibold tracking-[0.08em] uppercase">
+                {ROTULOS_ZONA[zona] ?? zona}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {lista.map((r) => (
+                  <ChipToggle
+                    key={r.slug}
+                    ativo={filtros.regiao.includes(r.slug)}
+                    onClick={() =>
+                      navegar({
+                        ...filtros,
+                        regiao: alternar(filtros.regiao, r.slug),
+                      })
+                    }
+                  >
+                    {r.nome}
+                    {r.total ? (
+                      <span className="ml-1.5 opacity-60">{r.total}</span>
+                    ) : null}
+                  </ChipToggle>
+                ))}
+              </div>
+            </div>
           ))}
-        </GrupoFiltro>
-      ))}
+        </div>
+      </GrupoFiltroRecolhivel>
 
       {construtoras.length > 1 && (
-        <GrupoFiltro titulo="Construtora">
-          {construtoras.map((c) => (
-            <ChipToggle
-              key={c.slug}
-              ativo={filtros.construtora.includes(c.slug)}
-              onClick={() =>
-                navegar({
-                  ...filtros,
-                  construtora: alternar(filtros.construtora, c.slug),
-                })
-              }
-            >
-              {c.nome}
-            </ChipToggle>
-          ))}
-        </GrupoFiltro>
+        <GrupoFiltroRecolhivel titulo="Construtora">
+          <div className="flex flex-wrap gap-2 pt-1">
+            {construtoras.map((c) => (
+              <ChipToggle
+                key={c.slug}
+                ativo={filtros.construtora.includes(c.slug)}
+                onClick={() =>
+                  navegar({
+                    ...filtros,
+                    construtora: alternar(filtros.construtora, c.slug),
+                  })
+                }
+              >
+                {c.nome}
+              </ChipToggle>
+            ))}
+          </div>
+        </GrupoFiltroRecolhivel>
       )}
     </div>
   );
@@ -205,7 +248,7 @@ export function Catalogo({
                 : "empreendimentos disponíveis"}
               <span className="text-noite-400 font-sans text-base font-normal">
                 {" "}
-                no Grande Rio
+                no Rio de Janeiro e região
               </span>
             </h1>
 
@@ -356,6 +399,38 @@ function GrupoFiltro({
     <div className="py-4">
       <p className="text-noite-200 mb-3 font-sans text-sm font-semibold">{titulo}</p>
       <div className="flex flex-wrap gap-2">{children}</div>
+    </div>
+  );
+}
+
+function GrupoFiltroRecolhivel({
+  titulo,
+  children,
+  inicialmenteAberto = false,
+}: {
+  titulo: string;
+  children: React.ReactNode;
+  inicialmenteAberto?: boolean;
+}) {
+  const [aberto, setAberto] = useState(inicialmenteAberto);
+
+  return (
+    <div className="py-2" data-open={aberto || undefined}>
+      <button
+        type="button"
+        aria-expanded={aberto}
+        onClick={() => setAberto((atual) => !atual)}
+        className="text-noite-200 hover:text-noite-50 flex min-h-11 w-full items-center justify-between gap-3 font-sans text-sm font-semibold"
+      >
+        {titulo}
+        <ChevronDown
+          className="t-accordion-chevron text-noite-500 size-4 shrink-0"
+          aria-hidden
+        />
+      </button>
+      <div className="t-accordion-panel" aria-hidden={!aberto} inert={!aberto}>
+        <div className="t-accordion-inner pb-3">{children}</div>
+      </div>
     </div>
   );
 }

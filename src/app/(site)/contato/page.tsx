@@ -63,7 +63,7 @@ export default function PaginaContato() {
           </address>
 
           <p className="text-noite-500 mt-7 font-sans text-sm">
-            {site.creci} · Atendimento no Grande Rio
+            {site.creci} · Atendimento no Rio e região
           </p>
         </ScrollReveal>
 

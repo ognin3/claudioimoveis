@@ -65,6 +65,7 @@ export async function enviarLeadMeta(evento: EventoLeadMeta): Promise<void> {
       headers: { "content-type": "application/json" },
       body: JSON.stringify(payload),
       cache: "no-store",
+      signal: AbortSignal.timeout(8_000),
     },
   );
 

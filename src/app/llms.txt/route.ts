@@ -7,7 +7,7 @@ export async function GET() {
   const conteudo = [
     `# ${site.nome}`,
     "",
-    `> Site oficial de ${site.nome}, ${site.creci}, especializado em apartamentos Minha Casa Minha Vida, lançamentos e imóveis prontos no Grande Rio.`,
+    `> Site oficial de ${site.nome}, ${site.creci}, especializado em apartamentos Minha Casa Minha Vida, lançamentos e imóveis prontos no Rio de Janeiro e região.`,
     "",
     `${site.bio} O site não publica preços: valores, entrada, subsídio e disponibilidade devem ser confirmados diretamente com o corretor.`,
     "",

@@ -2,8 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Check, MapPin } from "lucide-react";
-import { BadgeStatus, Badge } from "@/components/ui/Badge";
+import { rotuloStatus } from "@/components/ui/Badge";
 import { LeadForm } from "@/components/conversao/LeadForm";
+import { MobileLeadCTA } from "@/components/conversao/MobileLeadCTA";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { CardImovel } from "@/components/imovel/CardImovel";
 import { GaleriaImovel } from "@/components/imovel/GaleriaImovel";
@@ -68,7 +69,7 @@ export default async function PaginaImovel({
   ].filter(Boolean) as Array<[string, string]>;
 
   return (
-    <article>
+    <article className="pb-20 lg:pb-0">
       <JsonLd
         dados={{
           "@context": "https://schema.org",
@@ -125,9 +126,10 @@ export default async function PaginaImovel({
       />
       {/* Cabecalho */}
       <div className="mx-auto max-w-6xl px-4 pt-10 sm:px-6">
-        <div className="flex flex-wrap items-center gap-2">
-          <BadgeStatus status={imovel.status} />
-          <Badge>{imovel.construtora.nome}</Badge>
+        <div className="text-noite-400 flex flex-wrap items-center gap-2 font-sans text-xs font-semibold tracking-[0.1em] uppercase">
+          <span className="text-ouro-400">{rotuloStatus[imovel.status]}</span>
+          <span className="bg-noite-600 size-1 rounded-full" aria-hidden />
+          <span>{imovel.construtora.nome}</span>
         </div>
 
         <h1 className="text-noite-50 mt-4 text-[length:var(--text-h1)] font-semibold">
@@ -274,7 +276,10 @@ export default async function PaginaImovel({
         </div>
 
         {/* Coluna de conversao — sticky no desktop */}
-        <aside className="order-first lg:order-last lg:col-span-1">
+        <aside
+          id="condicoes"
+          className="order-first scroll-mt-28 lg:order-last lg:col-span-1"
+        >
           <div className="sticky top-24 space-y-4">
             <dl className="border-noite-800 bg-noite-900 space-y-2 rounded-[length:var(--radius-card)] border p-5 text-sm">
               <div className="flex justify-between gap-4">
@@ -334,6 +339,8 @@ export default async function PaginaImovel({
           ← Ver todos os imóveis
         </Link>
       </div>
+
+      <MobileLeadCTA />
     </article>
   );
 }

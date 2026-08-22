@@ -135,3 +135,17 @@ export const queryConfiguracoes = defineQuery(/* groq */ `
     "fotoCorretor": fotoCorretor ${camposImagem}
   }
 `);
+
+/** Validação server-side do imóvel informado no formulário de lead. */
+export const queryImovelParaLead = defineQuery(/* groq */ `
+  *[_type == "imovel" && _id == $id && publicado == true][0] {
+    _id,
+    nome,
+    "bairro": regiao->nome
+  }
+`);
+
+/** Documentos técnicos temporários do limitador, nunca expostos pelo site. */
+export const queryControlesTaxaExpirados = defineQuery(/* groq */ `
+  *[_type == "controleTaxaLead" && expiraEm < $agora]._id [0...20]
+`);

@@ -2,8 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BedDouble, Camera, Car, MapPin, Ruler } from "lucide-react";
 import { BadgeStatus } from "@/components/ui/Badge";
-import { buttonClasses } from "@/components/ui/Button";
-import { linkWhatsApp } from "@/lib/whatsapp";
+import { LeadCaptureButton } from "@/components/conversao/LeadCaptureButton";
 import { descreverQuartos } from "@/lib/utils";
 import type { CardImovel as TipoCard } from "@/types/imovel";
 
@@ -130,18 +129,15 @@ export function CardImovel({
           </p>
 
           {/* `relative z-10`: fica acima do link esticado, senao o clique cairia no card. */}
-          <a
-            href={linkWhatsApp({
-              tipo: "imovel",
+          <LeadCaptureButton
+            imovel={{
+              id: imovel.id,
               nome: imovel.nome,
               bairro: imovel.regiao.nome,
-            })}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={buttonClasses("primary", "md", "relative z-10 mt-3 w-full")}
-          >
-            Falar sobre este imóvel
-          </a>
+            }}
+            rotulo="Receber condições"
+            className="relative z-10 mt-3 w-full"
+          />
         </div>
       </div>
     </article>

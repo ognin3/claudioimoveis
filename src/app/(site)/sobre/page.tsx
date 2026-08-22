@@ -125,7 +125,7 @@ export default async function PaginaSobre() {
           </div>
           <div className="text-noite-200 flex items-center gap-3 font-sans text-sm font-semibold lg:justify-end">
             <MapPin className="text-ouro-400 size-5" aria-hidden />
-            Grande Rio · {site.creci}
+            Rio de Janeiro e região · {site.creci}
           </div>
         </ScrollReveal>
       </section>

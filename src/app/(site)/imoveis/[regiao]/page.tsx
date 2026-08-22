@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ChevronRight, MapPin } from "lucide-react";
 import { CardImovel } from "@/components/imovel/CardImovel";
+import { CardImovelDestaque } from "@/components/imovel/CardImovelDestaque";
 import { LeadForm } from "@/components/conversao/LeadForm";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buscarRegiao, buscarRegioes } from "@/lib/sanity/fetch";
@@ -58,6 +59,7 @@ export default async function PaginaRegiao({
   const descricaoDireta =
     regiao.descricao ??
     `${regiao.nome} tem opções de apartamentos e lançamentos na ${zona}. Compare fotos, plantas, número de quartos e estágio da obra antes de consultar as condições com o Cláudio.`;
+  const resumoDireto = resumirDescricao(descricaoDireta);
   const perguntas = criarPerguntas(regiao.nome, regiao.imoveis.length, quartos);
 
   return (
@@ -142,7 +144,7 @@ export default async function PaginaRegiao({
             Apartamentos à venda em {regiao.nome}
           </h1>
           <p className="text-noite-300 mt-5 max-w-3xl text-lg leading-relaxed">
-            {descricaoDireta}
+            {resumoDireto}
           </p>
           <p className="text-noite-400 mt-4 font-sans text-sm">
             {regiao.imoveis.length}{" "}
@@ -160,12 +162,35 @@ export default async function PaginaRegiao({
           >
             Imóveis disponíveis em {regiao.nome}
           </h2>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {regiao.imoveis.map((imovel, indice) => (
-              <CardImovel key={imovel.id} imovel={imovel} prioridade={indice === 0} />
-            ))}
-          </div>
+          {regiao.imoveis.length === 1 ? (
+            <div className="mt-6">
+              <CardImovelDestaque imovel={regiao.imoveis[0]} />
+            </div>
+          ) : (
+            <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {regiao.imoveis.map((imovel, indice) => (
+                <CardImovel key={imovel.id} imovel={imovel} prioridade={indice === 0} />
+              ))}
+            </div>
+          )}
         </section>
+
+        {descricaoDireta !== resumoDireto ? (
+          <section
+            className="border-noite-800 border-t py-12"
+            aria-labelledby="sobre-regiao"
+          >
+            <div className="grid gap-5 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
+              <h2
+                id="sobre-regiao"
+                className="text-noite-50 text-[length:var(--text-h3)] font-semibold"
+              >
+                Morar em {regiao.nome}
+              </h2>
+              <p className="text-noite-300 leading-relaxed">{descricaoDireta}</p>
+            </div>
+          </section>
+        ) : null}
 
         <section className="border-noite-800 grid gap-10 border-t py-12 lg:grid-cols-[1fr_1fr]">
           <div>
@@ -201,6 +226,13 @@ export default async function PaginaRegiao({
       </div>
     </>
   );
+}
+
+function resumirDescricao(descricao: string) {
+  const primeiraFrase = descricao.match(/^.*?[.!?](?:\s|$)/)?.[0]?.trim();
+  if (primeiraFrase && primeiraFrase.length >= 70) return primeiraFrase;
+  if (descricao.length <= 190) return descricao;
+  return `${descricao.slice(0, 187).trimEnd()}…`;
 }
 
 function criarPerguntas(nome: string, total: number, quartos: number[]) {

@@ -40,7 +40,7 @@ O e-mail informado originalmente terminava em `.co`; assumido `.com` (typo).
 
 | Camada     | Escolha                                                   | Por quê                                                 |
 | ---------- | --------------------------------------------------------- | ------------------------------------------------------- |
-| Framework  | **Next.js 16.2 (App Router)** + React 19.2                | PPR, Server Actions, intercepting routes                |
+| Framework  | **Next.js 16.3.2 (App Router)** + React 19.2.8            | PPR, Server Actions, intercepting routes                |
 | Linguagem  | **TypeScript** (`strict: true`)                           | Único idioma do app e dos scripts                       |
 | Estilo     | **Tailwind CSS v4** + CSS vars                            | Zero runtime CSS-in-JS; ajuda no LCP                    |
 | CMS        | **Sanity** (Studio embutido em `/studio`, locale `pt-BR`) | Corretor edita sozinho; CDN de imagem resolve os 641 MB |
@@ -55,7 +55,7 @@ O e-mail informado originalmente terminava em `.co`; assumido `.com` (typo).
 
 ### Next.js 16 — leia a doc antes de codar
 
-O projeto roda **Next 16.2**, que tem breaking changes em relação ao seu conhecimento prévio.
+O projeto roda **Next 16.3.2**, que tem breaking changes em relação ao seu conhecimento prévio.
 A doc versionada está em `node_modules/next/dist/docs/` (é o que o `AGENTS.md` manda ler).
 **Consulte-a antes de escrever qualquer código de Next** — não confie na memória.
 
@@ -146,6 +146,9 @@ Claudio-Imoveis-V2/
    referenciado pelo `imovel`, e construtora é **filtro** no catálogo. O pipeline da Fase 4
    cobre só a Cury; os imóveis de JV, Direcional, Você RJ e Rebouças entram à mão pelo Studio,
    alimentados pelos books em `docs/MATERIAL-NOVO.md`.
+8. **Lead nunca é publicado no Sanity.** O dataset `production` é público para servir o
+   catálogo sem token; por isso todo lead é criado com ID `drafts.lead.*`, e o Studio remove
+   a ação de publicar. Nome, telefone e e-mail só podem ser lidos com autenticação.
 
 ---
 
@@ -278,7 +281,11 @@ Para editar arquivo de env por script, use `[System.IO.File]::WriteAllText` com
 - `legal_text` de cada imóvel (registro de incorporação) — já existe no scrape, exibir na
   página do imóvel.
 - LGPD: consentimento explícito no formulário + página de política de privacidade.
-  O lead é dado pessoal e vai para Sanity + Meta CAPI (hasheado).
+  O lead é dado pessoal, fica como draft privado no Sanity e vai para Meta CAPI hasheado.
+- A Server Action valida o imóvel novamente no Sanity, aceita apenas URL de origem do próprio
+  site, rejeita preenchimento automatizado e aplica limite persistente por HMAC do IP.
+- Não remover CSP, HSTS, `nosniff`, proteção contra iframe e políticas de permissões de
+  `next.config.ts`. O Studio tem cabeçalhos próprios para não quebrar autenticação/previews.
 
 ---
 
@@ -318,6 +325,7 @@ NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION # código do Search Console
 NEXT_PUBLIC_SANITY_PROJECT_ID / _DATASET
 SANITY_API_WRITE_TOKEN          # server-only: grava lead
 SANITY_REVALIDATE_SECRET
+LEAD_SECURITY_SECRET             # HMAC do IP no limitador antiabuso
 NEXT_PUBLIC_META_PIXEL_ID
 META_CAPI_ACCESS_TOKEN          # server-only
 META_GRAPH_API_VERSION
@@ -345,7 +353,15 @@ Atualizado em **22/08/2026**.
   ocultado no ambiente local com `devIndicators: false`.
 - Imagens corrigidas para alta fidelidade: hero usa foto horizontal 1440×900, cards preservam
   as capas de campanha em proporção 16:9 e o CDN entrega qualidade 80/90 com `sizes` ajustado.
-- **40 imóveis publicados** no Sanity e **71 rotas** geradas no build de produção.
+- Os CTAs dos cards agora capturam nome e WhatsApp em modal antes de encaminhar o lead;
+  páginas de imóvel recuperam a simulação com CTA móvel depois que o formulário sai da tela.
+- Regiões com um único empreendimento usam card horizontal de destaque; a introdução regional
+  foi encurtada e o texto completo permanece abaixo do imóvel para preservar SEO.
+- A home mostra só as 6 regiões com maior oferta e usa a foto real do Cláudio, CRECI, Instagram
+  e fatos verificáveis como prova de confiança — não existem depoimentos inventados.
+- O catálogo prioriza 4 regiões e recolhe a lista completa e as construtoras em accordions,
+  reduzindo o excesso visual da coluna de filtros no desktop e no mobile.
+- **40 imóveis publicados** no Sanity e **72 rotas** geradas no build de produção.
 - Correção aplicada no link esticado dos cards: filtros do catálogo não abrem mais imóveis.
 - Funil de lead concluído: formulário curto na home e em cada imóvel → grava no Sanity →
   dispara `Lead` no Pixel/CAPI com deduplicação → página `/obrigado` → WhatsApp.
@@ -355,6 +371,9 @@ Atualizado em **22/08/2026**.
   páginas regionais, sitemap, robots e `llms.txt` com todos os empreendimentos.
 - Build de produção, TypeScript e ESLint passam. Testes manuais cobriram desktop e mobile,
   filtro, mapa, ausência de overflow horizontal, formulário e captura de campanha.
+- Segurança endurecida: leads privados mesmo no dataset público, limitador distribuído,
+  validação server-side, timeouts externos e cabeçalhos de navegador. `npm audit` retorna
+  **0 vulnerabilidades** em produção e desenvolvimento; `/dev/ui` foi removida.
 - Lighthouse local mobile em produção: home chegou a **93/100 performance e 100/100 nas
   demais categorias**; catálogo ficou em 100/100 nas categorias não relacionadas a
   performance após as correções semânticas. O resultado de performance varia no ambiente
@@ -370,3 +389,5 @@ Atualizado em **22/08/2026**.
    Studio + WhatsApp.
 5. Confirmar com o cliente o e-mail `claudioshema2009@gmail.com` e a autorização de uso das
    marcas/fotos das construtoras.
+6. Criar `LEAD_SECURITY_SECRET` longo e aleatório na Vercel. Enquanto ausente, o servidor
+   usa `SANITY_REVALIDATE_SECRET` como fallback seguro, mas segredos separados são preferíveis.

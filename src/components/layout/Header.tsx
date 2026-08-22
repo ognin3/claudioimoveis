@@ -4,8 +4,9 @@ import Link from "next/link";
 import type { Route } from "next";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Menu, MessageCircle } from "lucide-react";
+import { Menu } from "lucide-react";
 import { buttonClasses } from "@/components/ui/Button";
+import { IconeWhatsApp } from "@/components/ui/IconeWhatsApp";
 import { Sheet } from "@/components/ui/Sheet";
 import { linkWhatsApp } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
@@ -30,22 +31,11 @@ export function Header() {
       <div className="border-noite-700/70 bg-noite-950/72 pointer-events-auto mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 rounded-2xl border px-3 shadow-[0_18px_50px_-24px_rgba(0,0,0,0.95),inset_0_1px_rgba(255,255,255,0.06)] backdrop-blur-xl sm:px-5">
         <Link
           href="/"
-          className="group flex min-w-0 items-center gap-3 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4"
+          className="flex min-w-0 items-center rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4"
           aria-label="Cláudio Corretor — página inicial"
         >
-          <span
-            className="bg-ouro-400 shadow-ouro-500/20 font-display text-noite-950 grid size-9 shrink-0 place-items-center rounded-xl text-lg font-semibold shadow-lg transition-transform duration-300 group-hover:-rotate-3"
-            aria-hidden
-          >
-            C
-          </span>
-          <span className="min-w-0 leading-none">
-            <span className="font-display text-noite-50 block truncate text-lg font-semibold sm:text-xl">
-              Cláudio <span className="text-ouro-400">Corretor</span>
-            </span>
-            <span className="text-noite-500 mt-1 hidden font-sans text-[0.625rem] font-semibold tracking-[0.13em] uppercase sm:block">
-              {site.creci} · Rio de Janeiro
-            </span>
+          <span className="font-display text-noite-50 block truncate text-xl leading-none font-semibold tracking-[-0.025em] sm:text-2xl">
+            Cláudio <span className="text-ouro-400">Corretor</span>
           </span>
         </Link>
 
@@ -80,7 +70,7 @@ export function Header() {
             rel="noopener noreferrer"
             className={buttonClasses("whatsapp", "sm", "hidden px-4 sm:inline-flex")}
           >
-            <MessageCircle className="size-4" aria-hidden />
+            <IconeWhatsApp className="size-4" />
             Falar com o Cláudio
           </a>
           <a
@@ -90,7 +80,7 @@ export function Header() {
             className="motion-button bg-whatsapp text-noite-950 grid size-11 place-items-center rounded-xl sm:hidden"
             aria-label="Falar com o Cláudio no WhatsApp"
           >
-            <MessageCircle className="size-5" aria-hidden />
+            <IconeWhatsApp className="size-5" />
           </a>
           <button
             type="button"

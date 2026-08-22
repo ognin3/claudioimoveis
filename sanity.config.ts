@@ -33,12 +33,21 @@ export default defineConfig({
 
   document: {
     // O singleton de configuracoes nao pode ser duplicado nem apagado.
-    actions: (acoes, contexto) =>
-      contexto.schemaType === "configuracoes"
-        ? acoes.filter(
-            ({ action }) =>
-              action && !["duplicate", "delete", "unpublish"].includes(action),
-          )
-        : acoes,
+    // Leads ficam sempre como drafts: o dataset e publico e contem dados pessoais.
+    actions: (acoes, contexto) => {
+      if (contexto.schemaType === "configuracoes") {
+        return acoes.filter(
+          ({ action }) =>
+            action && !["duplicate", "delete", "unpublish"].includes(action),
+        );
+      }
+      if (contexto.schemaType === "lead") {
+        return acoes.filter(
+          ({ action }) =>
+            action && !["publish", "unpublish", "duplicate"].includes(action),
+        );
+      }
+      return acoes;
+    },
   },
 });

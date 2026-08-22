@@ -54,7 +54,7 @@ export default function OpenGraphImage() {
           Apartamentos, lançamentos e atendimento direto para você sair do aluguel.
         </div>
         <div style={{ color: "#ecd08a", display: "flex", fontSize: 25, marginTop: 42 }}>
-          CRECI 103666 · Grande Rio
+          CRECI 103666 · Rio de Janeiro e região
         </div>
       </div>
     </div>,

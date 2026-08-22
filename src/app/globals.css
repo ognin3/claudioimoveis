@@ -91,6 +91,37 @@
   --learn-in: 350ms;
   --learn-out: 350ms;
   --learn-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Accordion — receita baseada no transitions.dev/21-accordion. */
+  --acc-dur: 300ms;
+  --acc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.t-accordion-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--acc-dur) var(--acc-ease),
+    opacity var(--duration-quick) ease;
+}
+
+.t-accordion-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.t-accordion-chevron {
+  transition: transform var(--acc-dur) var(--acc-ease);
+}
+
+[data-open="true"] > .t-accordion-panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+[data-open="true"] > button .t-accordion-chevron {
+  transform: rotate(180deg);
 }
 
 @layer base {
