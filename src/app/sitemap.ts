@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
-import { buscarSlugsImoveis } from "@/lib/sanity/fetch";
+import { buscarRegioes, buscarSlugsImoveis } from "@/lib/sanity/fetch";
 import { site } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const slugs = await buscarSlugsImoveis();
+  const [slugs, regioes] = await Promise.all([buscarSlugsImoveis(), buscarRegioes()]);
   const agora = new Date();
 
   return [
@@ -24,6 +24,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: agora,
       changeFrequency: "weekly" as const,
       priority: 0.8,
+    })),
+    ...regioes.map((regiao) => ({
+      url: `${site.url}/imoveis/${regiao.slug}`,
+      lastModified: agora,
+      changeFrequency: "weekly" as const,
+      priority: 0.75,
     })),
     {
       url: `${site.url}/privacidade`,

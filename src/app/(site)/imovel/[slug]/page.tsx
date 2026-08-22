@@ -102,6 +102,27 @@ export default async function PaginaImovel({
             : {}),
         }}
       />
+      <JsonLd
+        dados={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Início", item: site.url },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: imovel.regiao.nome,
+              item: `${site.url}/imoveis/${imovel.regiao.slug}`,
+            },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: imovel.nome,
+              item: `${site.url}/imovel/${imovel.slug}`,
+            },
+          ],
+        }}
+      />
       {/* Cabecalho */}
       <div className="mx-auto max-w-6xl px-4 pt-10 sm:px-6">
         <div className="flex flex-wrap items-center gap-2">

@@ -27,9 +27,21 @@ export const metadata: Metadata = {
     template: `%s | ${site.nome}`,
   },
   description: site.descricaoCurta,
+  keywords: [
+    "apartamentos Minha Casa Minha Vida RJ",
+    "apartamentos à venda no Rio de Janeiro",
+    "lançamentos Cury RJ",
+    "imóveis Porto Maravilha",
+    "apartamentos São Cristóvão",
+    "imóveis Niterói",
+    "corretor de imóveis Rio de Janeiro",
+  ],
   alternates: { canonical: "/" },
   applicationName: site.nome,
   authors: [{ name: site.nome }],
+  creator: site.nome,
+  publisher: site.nome,
+  category: "imóveis",
   openGraph: {
     type: "website",
     locale: site.locale,
@@ -40,6 +52,9 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
   formatDetection: { telephone: true, address: false, email: false },
 };
 

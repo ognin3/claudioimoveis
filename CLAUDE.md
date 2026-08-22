@@ -314,6 +314,7 @@ filtro; `next/font` local com subset latin; Pixel deferido para idle; imagem LCP
 
 ```
 NEXT_PUBLIC_SITE_URL
+NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION # código do Search Console
 NEXT_PUBLIC_SANITY_PROJECT_ID / _DATASET
 SANITY_API_WRITE_TOKEN          # server-only: grava lead
 SANITY_REVALIDATE_SECRET
@@ -331,14 +332,15 @@ LEAD_NOTIFICACAO_EMAIL
 Atualizado em **22/08/2026**.
 
 - Site funcional em Next.js, com tema escuro, home, catálogo filtrável, páginas dedicadas,
-  galeria, plantas, mapa, política de privacidade e Studio Sanity embutido.
-- **40 imóveis publicados** no Sanity e **50 páginas de conteúdo** pré-renderizadas no build.
+  15 páginas regionais, galeria, plantas, mapa, política de privacidade e Studio Sanity.
+- **40 imóveis publicados** no Sanity e **71 rotas** geradas no build de produção.
 - Correção aplicada no link esticado dos cards: filtros do catálogo não abrem mais imóveis.
 - Funil de lead concluído: formulário curto na home e em cada imóvel → grava no Sanity →
   dispara `Lead` no Pixel/CAPI com deduplicação → página `/obrigado` → WhatsApp.
 - UTMs e `fbclid` persistem durante a navegação e são armazenados junto ao lead.
 - E-mail via Resend é opcional; falha de Meta/Resend nunca impede a gravação do lead.
-- SEO técnico presente: canonical, JSON-LD de corretor e empreendimento, sitemap e robots.
+- SEO/AEO/GEO presente: metadados únicos, imagem social, canonical, JSON-LD, FAQ visível,
+  páginas regionais, sitemap, robots e `llms.txt` com todos os empreendimentos.
 - Build de produção, TypeScript e ESLint passam. Testes manuais cobriram desktop e mobile,
   filtro, mapa, ausência de overflow horizontal, formulário e captura de campanha.
 - Lighthouse local mobile em produção: home chegou a **90/100 performance e 100/100 nas

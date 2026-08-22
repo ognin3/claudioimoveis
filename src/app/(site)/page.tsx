@@ -1,6 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, KeyRound, MessageCircle, Search } from "lucide-react";
+import type { Route } from "next";
+import {
+  ArrowRight,
+  BadgeCheck,
+  ChevronRight,
+  KeyRound,
+  MapPin,
+  MessageCircle,
+  Search,
+} from "lucide-react";
 import { buttonClasses } from "@/components/ui/Button";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { CardImovel } from "@/components/imovel/CardImovel";
@@ -18,21 +27,52 @@ export default async function Home() {
 
   const imagemHero = destaques[0]?.capa;
   const zonas = [...new Set(regioes.map((r) => r.zona))];
+  const perguntas = perguntasFrequentes;
 
   return (
     <>
       <JsonLd
         dados={{
           "@context": "https://schema.org",
-          "@type": "RealEstateAgent",
-          name: site.nome,
-          url: site.url,
-          description: site.bio,
-          telephone: `+${site.whatsapp}`,
-          email: site.email,
-          identifier: site.creci,
-          areaServed: { "@type": "AdministrativeArea", name: site.regiao },
-          sameAs: [site.instagram],
+          "@graph": [
+            {
+              "@type": "WebSite",
+              name: site.nome,
+              url: site.url,
+              inLanguage: "pt-BR",
+              description: site.descricaoCurta,
+            },
+            {
+              "@type": "RealEstateAgent",
+              name: site.nome,
+              url: site.url,
+              description: site.bio,
+              telephone: `+${site.whatsapp}`,
+              email: site.email,
+              identifier: site.creci,
+              areaServed: [
+                { "@type": "City", name: "Rio de Janeiro" },
+                { "@type": "City", name: "Niterói" },
+                { "@type": "City", name: "Nova Iguaçu" },
+                { "@type": "AdministrativeArea", name: "Baixada Fluminense" },
+              ],
+              knowsAbout: [
+                "Minha Casa Minha Vida",
+                "financiamento imobiliário",
+                "apartamentos no Rio de Janeiro",
+                "lançamentos imobiliários",
+              ],
+              sameAs: [site.instagram],
+            },
+            {
+              "@type": "FAQPage",
+              mainEntity: perguntas.map((item) => ({
+                "@type": "Question",
+                name: item.pergunta,
+                acceptedAnswer: { "@type": "Answer", text: item.resposta },
+              })),
+            },
+          ],
         }}
       />
       {/* ---------------------------------------------------------------- Hero */}
@@ -136,6 +176,47 @@ export default async function Home() {
         </section>
       )}
 
+      {/* ------------------------------------------------------- Regioes SEO */}
+      <section className="border-noite-800 mx-auto max-w-6xl border-t px-4 py-16 sm:px-6">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-ouro-400 flex items-center gap-2 font-sans text-sm font-semibold tracking-[0.14em] uppercase">
+              <MapPin className="size-4" aria-hidden />
+              Grande Rio
+            </p>
+            <h2 className="text-noite-50 mt-3 text-[length:var(--text-h2)] font-semibold">
+              Encontre imóveis por região
+            </h2>
+            <p className="text-noite-400 mt-2">
+              Páginas locais com os empreendimentos disponíveis em cada bairro e cidade.
+            </p>
+          </div>
+        </div>
+        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {regioes.map((regiao) => (
+            <Link
+              key={regiao.slug}
+              href={`/imoveis/${regiao.slug}` as Route}
+              className="border-noite-800 bg-noite-900 hover:border-ouro-700 hover:bg-noite-800 group flex min-h-16 items-center justify-between gap-4 rounded-xl border px-5 py-4 transition-colors"
+            >
+              <span>
+                <span className="text-noite-100 block font-sans font-semibold">
+                  {regiao.nome}
+                </span>
+                <span className="text-noite-500 mt-0.5 block font-sans text-xs">
+                  {regiao.total}{" "}
+                  {regiao.total === 1 ? "empreendimento" : "empreendimentos"}
+                </span>
+              </span>
+              <ChevronRight
+                className="text-ouro-500 size-4 transition-transform group-hover:translate-x-1"
+                aria-hidden
+              />
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* -------------------------------------------------------- Como funciona */}
       <section className="bg-noite-900 py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -211,6 +292,34 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* -------------------------------------------------------------- FAQ */}
+      <section className="border-noite-800 mx-auto max-w-4xl border-t px-4 py-20 sm:px-6">
+        <p className="text-ouro-400 text-center font-sans text-sm font-semibold tracking-[0.14em] uppercase">
+          Respostas diretas
+        </p>
+        <h2 className="text-noite-50 mt-3 text-center text-[length:var(--text-h2)] font-semibold">
+          Dúvidas sobre Minha Casa Minha Vida
+        </h2>
+        <p className="text-noite-400 mx-auto mt-3 max-w-2xl text-center">
+          O essencial para começar sua busca com mais segurança.
+        </p>
+        <div className="mt-8 space-y-3">
+          {perguntas.map((item) => (
+            <details
+              key={item.pergunta}
+              className="border-noite-800 bg-noite-900 open:border-ouro-800 rounded-[length:var(--radius-card)] border px-5 py-4"
+            >
+              <summary className="text-noite-100 cursor-pointer font-sans font-semibold">
+                {item.pergunta}
+              </summary>
+              <p className="text-noite-400 mt-3 max-w-3xl leading-relaxed">
+                {item.resposta}
+              </p>
+            </details>
+          ))}
+        </div>
+      </section>
+
       {/* ------------------------------------------------------------ CTA final */}
       <section className="bg-noite-900">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.05fr]">
@@ -239,6 +348,39 @@ export default async function Home() {
     </>
   );
 }
+
+const perguntasFrequentes = [
+  {
+    pergunta: "Quem pode comprar pelo Minha Casa Minha Vida?",
+    resposta:
+      "O enquadramento depende da renda familiar, do imóvel e das regras vigentes no momento da análise. O Cláudio confere seu perfil e indica as opções compatíveis, sem compromisso.",
+  },
+  {
+    pergunta: "Posso usar meu FGTS na compra do apartamento?",
+    resposta:
+      "Em muitos casos, sim. O uso do FGTS depende das regras do financiamento e da situação do comprador e do imóvel. A análise individual confirma se ele pode compor a entrada ou reduzir o saldo.",
+  },
+  {
+    pergunta: "Preciso ter todo o valor da entrada?",
+    resposta:
+      "Não necessariamente. Algumas construtoras permitem parcelar parte da entrada durante a obra, mas as condições variam por empreendimento e perfil de crédito.",
+  },
+  {
+    pergunta: "Como descubro se tenho direito a subsídio?",
+    resposta:
+      "O valor possível depende da renda, da composição familiar, da cidade e das regras atuais do programa. Uma simulação com seus dados mostra a condição real, sem prometer valor antes da análise.",
+  },
+  {
+    pergunta: "Onde ficam os imóveis atendidos pelo Cláudio?",
+    resposta:
+      "Há opções no Rio de Janeiro, Porto Maravilha, São Cristóvão, Zona Norte, Zona Oeste, Niterói e Baixada Fluminense. O catálogo mostra apenas empreendimentos publicados e sujeitos à disponibilidade.",
+  },
+  {
+    pergunta: "O atendimento do corretor tem custo para o comprador?",
+    resposta:
+      "Não. A orientação sobre escolha do imóvel, simulação e documentação não gera cobrança adicional para o comprador; a remuneração do corretor é feita pela construtora.",
+  },
+] as const;
 
 function Faixa({ numero, rotulo }: { numero: string; rotulo: string }) {
   return (

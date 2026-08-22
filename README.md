@@ -20,6 +20,7 @@ O site abre em `http://localhost:3000` e o painel de conteúdo em
 ## Variáveis obrigatórias
 
 - `NEXT_PUBLIC_SITE_URL`: endereço público final do site.
+- `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`: código opcional do Search Console.
 - `NEXT_PUBLIC_SANITY_PROJECT_ID` e `NEXT_PUBLIC_SANITY_DATASET`: leitura do conteúdo.
 - `SANITY_API_WRITE_TOKEN`: gravação dos leads.
 - `SANITY_REVALIDATE_SECRET`: validação do webhook de publicação do Sanity.
@@ -43,4 +44,5 @@ produção e trocar `NEXT_PUBLIC_SITE_URL` pela URL definitiva. Depois, cadastra
 webhook `https://SEU-DOMINIO/api/revalidate` com o segredo de revalidação.
 
 As decisões, pendências externas e o estado detalhado do projeto ficam em
-[CLAUDE.md](./CLAUDE.md).
+[CLAUDE.md](./CLAUDE.md). O checklist pós-domínio está em
+[docs/SEO-LANCAMENTO.md](./docs/SEO-LANCAMENTO.md).
