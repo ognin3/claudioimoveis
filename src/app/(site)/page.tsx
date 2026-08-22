@@ -76,10 +76,10 @@ export default async function Home() {
         }}
       />
       {/* ---------------------------------------------------------------- Hero */}
-      <section className="relative isolate overflow-hidden">
+      <section className="relative isolate -mt-20 overflow-hidden pt-20">
         <div className="absolute inset-0 -z-10">
           {imagemHero ? (
-            <picture className="absolute inset-0">
+            <picture className="hero-scroll-media absolute inset-0">
               <source media="(max-width: 640px)" srcSet={srcHeroMobile(imagemHero.url)} />
               <Image
                 src={imagemHero.url}
@@ -98,11 +98,11 @@ export default async function Home() {
             <div className="from-noite-800 to-noite-950 h-full w-full bg-gradient-to-br" />
           )}
           {/* Escurece o suficiente para o texto passar em contraste AA sobre qualquer foto. */}
-          <div className="from-noite-950/95 via-noite-950/80 to-noite-950/35 absolute inset-0 bg-gradient-to-r" />
+          <div className="hero-scroll-shade from-noite-950/95 via-noite-950/80 to-noite-950/35 absolute inset-0 bg-gradient-to-r" />
           <div className="motion-hero-ambient absolute -top-32 right-[8%] size-[34rem] rounded-full" />
         </div>
 
-        <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6 sm:py-32 lg:py-40">
+        <div className="hero-scroll-content mx-auto max-w-6xl px-4 py-24 sm:px-6 sm:py-32 lg:py-40">
           <div className="max-w-2xl">
             <p className="motion-hero-item text-ouro-300 font-sans text-sm font-semibold tracking-[0.18em] uppercase">
               Minha Casa Minha Vida · Rio de Janeiro
@@ -147,6 +147,7 @@ export default async function Home() {
             </dl>
           </div>
         </div>
+        <div className="hero-scroll-progress bg-ouro-400 absolute inset-x-0 bottom-0 h-px origin-left" />
       </section>
 
       {/* --------------------------------------------------------- Em destaque */}

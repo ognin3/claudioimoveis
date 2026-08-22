@@ -64,9 +64,13 @@ export function CardImovel({
           className="motion-card-image object-cover"
         />
 
-        <div className="absolute top-3 left-3">
-          <BadgeStatus status={imovel.status} />
-        </div>
+        {/* "Lancamento" e o estado dominante do catalogo e virava ruido verde
+            em quase todos os cards. Os estados que informam prazo continuam. */}
+        {imovel.status !== "lancamento" && (
+          <div className="absolute top-3 left-3">
+            <BadgeStatus status={imovel.status} />
+          </div>
+        )}
 
         {imovel.totalFotos ? (
           <span className="absolute right-3 bottom-3 inline-flex items-center gap-1.5 rounded-[length:var(--radius-pill)] bg-black/65 px-2.5 py-1 font-sans text-xs font-medium text-white backdrop-blur">

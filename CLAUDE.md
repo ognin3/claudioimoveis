@@ -338,6 +338,11 @@ Atualizado em **22/08/2026**.
 - Movimento visual aplicado com CSS + `IntersectionObserver`: hero em camadas, entradas por
   rolagem, cards e CTAs com resposta física, setas e overlays refinados. Tudo respeita
   `prefers-reduced-motion`, sem biblioteca de animação no caminho crítico.
+- O hero agora também responde ao progresso real da rolagem (parallax de foto, recuo da
+  copy e filete dourado) usando Scroll-driven Animations com fallback estático.
+- Cabeçalho flutuante translúcido com navegação ativa e menu móvel; páginas institucionais
+  `/sobre` e `/contato` concluídas e incluídas no sitemap. O indicador visual do Next.js foi
+  ocultado no ambiente local com `devIndicators: false`.
 - Imagens corrigidas para alta fidelidade: hero usa foto horizontal 1440×900, cards preservam
   as capas de campanha em proporção 16:9 e o CDN entrega qualidade 80/90 com `sizes` ajustado.
 - **40 imóveis publicados** no Sanity e **71 rotas** geradas no build de produção.
@@ -350,7 +355,7 @@ Atualizado em **22/08/2026**.
   páginas regionais, sitemap, robots e `llms.txt` com todos os empreendimentos.
 - Build de produção, TypeScript e ESLint passam. Testes manuais cobriram desktop e mobile,
   filtro, mapa, ausência de overflow horizontal, formulário e captura de campanha.
-- Lighthouse local mobile em produção: home chegou a **90/100 performance e 100/100 nas
+- Lighthouse local mobile em produção: home chegou a **93/100 performance e 100/100 nas
   demais categorias**; catálogo ficou em 100/100 nas categorias não relacionadas a
   performance após as correções semânticas. O resultado de performance varia no ambiente
   local e deve ser repetido no endereço final da Vercel.

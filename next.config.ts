@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
   // O site expoe telefone e e-mail do corretor; nao vale entregar a versao do Next junto.
   poweredByHeader: false,
 
+  // O botao preto com "N" e apenas a ferramenta visual do Next em `next dev`.
+  // Erros continuam aparecendo normalmente no terminal e no overlay.
+  devIndicators: false,
+
   typedRoutes: true,
 };
 

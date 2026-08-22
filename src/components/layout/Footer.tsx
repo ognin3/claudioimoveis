@@ -1,7 +1,8 @@
 import Link from "next/link";
+import type { Route } from "next";
 import { Mail, MessageCircle } from "lucide-react";
 import { linkWhatsApp } from "@/lib/whatsapp";
-import { construtoras, site } from "@/lib/site";
+import { site } from "@/lib/site";
 
 /**
  * O lucide-react v1 removeu os icones de marca (Instagram, Facebook...) por
@@ -80,11 +81,29 @@ export async function Footer() {
           </div>
 
           <div>
-            <p className="text-noite-50 font-sans text-sm font-semibold">Construtoras</p>
-            <ul className="text-noite-400 mt-3 space-y-1.5 text-sm">
-              {construtoras.map((c) => (
-                <li key={c.slug}>{c.nome}</li>
-              ))}
+            <p className="text-noite-50 font-sans text-sm font-semibold">Navegação</p>
+            <ul className="text-noite-400 mt-3 space-y-2 text-sm">
+              <li>
+                <Link href="/imoveis" className="hover:text-ouro-300 transition-colors">
+                  Ver imóveis
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={"/sobre" as Route}
+                  className="hover:text-ouro-300 transition-colors"
+                >
+                  Sobre o Cláudio
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={"/contato" as Route}
+                  className="hover:text-ouro-300 transition-colors"
+                >
+                  Contato
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

@@ -167,6 +167,47 @@
   animation: hero-copy-in 700ms var(--ease-smooth-out) backwards;
 }
 
+/*
+ * O progresso do scroll transforma o hero numa abertura cinematografica:
+ * a foto avanca devagar, a copy recua e o filete dourado registra a passagem.
+ * Sem suporte a Scroll-driven Animations, tudo permanece no estado estatico.
+ */
+.hero-scroll-media {
+  transform-origin: 62% 50%;
+}
+
+.hero-scroll-progress {
+  transform: scaleX(0);
+}
+
+@supports (animation-timeline: scroll()) {
+  .hero-scroll-media {
+    animation: hero-media-scroll linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 90vh;
+    will-change: transform;
+  }
+
+  .hero-scroll-content {
+    animation: hero-content-scroll linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 72vh;
+    will-change: transform, opacity;
+  }
+
+  .hero-scroll-shade {
+    animation: hero-shade-scroll linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 72vh;
+  }
+
+  .hero-scroll-progress {
+    animation: hero-progress-scroll linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 72vh;
+  }
+}
+
 .motion-delay-1 {
   animation-delay: 80ms;
 }
@@ -349,6 +390,31 @@
   }
 }
 
+@keyframes hero-media-scroll {
+  to {
+    transform: translate3d(0, 4%, 0) scale(1.09);
+  }
+}
+
+@keyframes hero-content-scroll {
+  to {
+    opacity: 0.18;
+    transform: translate3d(0, -30px, 0) scale(0.985);
+  }
+}
+
+@keyframes hero-shade-scroll {
+  to {
+    opacity: 0.78;
+  }
+}
+
+@keyframes hero-progress-scroll {
+  to {
+    transform: scaleX(1);
+  }
+}
+
 @keyframes fab-in {
   from {
     opacity: 0;
@@ -467,5 +533,14 @@
   .t-learn-chevron,
   .t-learn-arm {
     transition: none !important;
+  }
+
+  .hero-scroll-media,
+  .hero-scroll-content,
+  .hero-scroll-shade,
+  .hero-scroll-progress {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

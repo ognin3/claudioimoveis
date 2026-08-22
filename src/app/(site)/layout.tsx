@@ -11,7 +11,9 @@ export default function LayoutSite({ children }: { children: React.ReactNode }) 
   return (
     <>
       <Header />
-      <main className="flex-1">{children}</main>
+      <main id="conteudo-principal" className="flex-1 pt-20">
+        {children}
+      </main>
       <Footer />
       <WhatsAppFAB />
       <MetaPixel />

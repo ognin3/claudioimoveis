@@ -128,7 +128,7 @@ export const queryDepoimentos = defineQuery(/* groq */ `
 `);
 
 export const queryConfiguracoes = defineQuery(/* groq */ `
-  *[_type == "configuracoes"][0] {
+  *[_id == "configuracoes" && _type == "configuracoes"][0] {
     heroTitulo,
     heroSubtitulo,
     sobreTexto,
