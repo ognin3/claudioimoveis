@@ -41,9 +41,10 @@ export const queryImoveis = defineQuery(/* groq */ `
   *[_type == "imovel" && publicado == true] | ${ordemPadrao} { ${camposCard} }
 `);
 
-/** Destaques da home. */
+/** Seis lançamentos mais recentes da home, sem depender de marcação manual. */
 export const queryImoveisDestaque = defineQuery(/* groq */ `
-  *[_type == "imovel" && publicado == true && destaque == true] | ${ordemPadrao} [0...6] {
+  *[_type == "imovel" && publicado == true && status == "lancamento"]
+  | order(_createdAt desc, ordem asc, nome asc) [0...6] {
     ${camposCard}
   }
 `);

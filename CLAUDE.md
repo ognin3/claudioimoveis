@@ -333,6 +333,8 @@ Atualizado em **22/08/2026**.
 
 - Site funcional em Next.js, com tema escuro, home, catálogo filtrável, páginas dedicadas,
   15 páginas regionais, galeria, plantas, mapa, política de privacidade e Studio Sanity.
+- A home exibe automaticamente os **6 lançamentos mais recentes**; todas as plantas abrem
+  em visualização ampliada acessível, tanto no desktop quanto no celular.
 - **40 imóveis publicados** no Sanity e **71 rotas** geradas no build de produção.
 - Correção aplicada no link esticado dos cards: filtros do catálogo não abrem mais imóveis.
 - Funil de lead concluído: formulário curto na home e em cada imóvel → grava no Sanity →

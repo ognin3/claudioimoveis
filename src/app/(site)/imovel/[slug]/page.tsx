@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -8,6 +7,7 @@ import { LeadForm } from "@/components/conversao/LeadForm";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { CardImovel } from "@/components/imovel/CardImovel";
 import { GaleriaImovel } from "@/components/imovel/GaleriaImovel";
+import { PlantaAmpliavel } from "@/components/imovel/PlantaAmpliavel";
 import { LocalizacaoImovel } from "@/components/imovel/LocalizacaoImovel";
 import { buscarImovel, buscarSlugsImoveis } from "@/lib/sanity/fetch";
 import { descreverQuartos } from "@/lib/utils";
@@ -182,15 +182,12 @@ export default async function PaginaImovel({
                     className="border-noite-800 bg-noite-900 rounded-[length:var(--radius-card)] border p-5"
                   >
                     {t.planta?.url && (
-                      <div className="bg-noite-950 relative mb-4 aspect-[4/3] overflow-hidden rounded-lg">
-                        <Image
-                          src={t.planta.url}
-                          alt={`Planta ${t.rotulo}`}
-                          fill
-                          sizes="(min-width: 640px) 50vw, 100vw"
-                          className="object-contain"
-                        />
-                      </div>
+                      <PlantaAmpliavel
+                        imagem={t.planta}
+                        alt={`Planta ${t.rotulo} do ${imovel.nome}`}
+                        rotulo={t.rotulo}
+                        className="mb-4"
+                      />
                     )}
                     <p className="text-noite-50 font-sans font-semibold">{t.rotulo}</p>
                     <p className="text-noite-400 mt-1 text-sm">
@@ -213,25 +210,12 @@ export default async function PaginaImovel({
               </h2>
               <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {imovel.plantas.map((p, i) => (
-                  <div
+                  <PlantaAmpliavel
                     key={p.url}
-                    className="border-noite-800 bg-noite-950 relative aspect-[4/3] overflow-hidden rounded-lg border"
-                  >
-                    <Image
-                      src={p.url}
-                      alt={p.alt ?? `${imovel.nome} — planta ${i + 1}`}
-                      fill
-                      sizes="(min-width: 640px) 33vw, 50vw"
-                      placeholder={p.lqip ? "blur" : "empty"}
-                      blurDataURL={p.lqip ?? undefined}
-                      className="object-contain"
-                    />
-                    {p.rotulo && (
-                      <span className="absolute inset-x-0 bottom-0 bg-black/70 px-2 py-1 text-center font-sans text-xs text-white">
-                        {p.rotulo}
-                      </span>
-                    )}
-                  </div>
+                    imagem={p}
+                    alt={p.alt ?? `${imovel.nome} — planta ${i + 1}`}
+                    rotulo={p.rotulo ?? `Planta ${i + 1}`}
+                  />
                 ))}
               </div>
               <p className="text-noite-500 mt-2 font-sans text-xs">
