@@ -38,6 +38,7 @@ type InputFieldProps = React.ComponentProps<"input"> & {
   label: string;
   erro?: string;
   dica?: string;
+  containerClassName?: string;
 };
 
 /** Label + input + mensagem de erro/dica, tudo ligado por id. Use este por padrao. */
@@ -47,13 +48,14 @@ export function InputField({
   dica,
   required,
   className,
+  containerClassName,
   ...props
 }: InputFieldProps) {
   const id = useId();
   const descricaoId = erro || dica ? `${id}-desc` : undefined;
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className={cn("flex flex-col gap-1.5", containerClassName)}>
       <label htmlFor={id} className="text-noite-200 font-sans text-sm font-medium">
         {label}
         {required && (

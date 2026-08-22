@@ -4,6 +4,8 @@ import { ArrowRight, BadgeCheck, KeyRound, MessageCircle, Search } from "lucide-
 import { buttonClasses } from "@/components/ui/Button";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { CardImovel } from "@/components/imovel/CardImovel";
+import { LeadForm } from "@/components/conversao/LeadForm";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { buscarImoveisDestaque, buscarRegioes } from "@/lib/sanity/fetch";
 import { linkWhatsApp } from "@/lib/whatsapp";
 import { site } from "@/lib/site";
@@ -19,6 +21,20 @@ export default async function Home() {
 
   return (
     <>
+      <JsonLd
+        dados={{
+          "@context": "https://schema.org",
+          "@type": "RealEstateAgent",
+          name: site.nome,
+          url: site.url,
+          description: site.bio,
+          telephone: `+${site.whatsapp}`,
+          email: site.email,
+          identifier: site.creci,
+          areaServed: { "@type": "AdministrativeArea", name: site.regiao },
+          sameAs: [site.instagram],
+        }}
+      />
       {/* ---------------------------------------------------------------- Hero */}
       <section className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10">
@@ -30,6 +46,7 @@ export default async function Home() {
               sizes="100vw"
               priority
               fetchPriority="high"
+              quality={45}
               placeholder={imagemHero.lqip ? "blur" : "empty"}
               blurDataURL={imagemHero.lqip ?? undefined}
               className="object-cover"
@@ -112,7 +129,7 @@ export default async function Home() {
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {destaques.map((imovel, i) => (
               <ScrollReveal key={imovel.id} atraso={i * 80}>
-                <CardImovel imovel={imovel} prioridade={i === 0} />
+                <CardImovel imovel={imovel} />
               </ScrollReveal>
             ))}
           </div>
@@ -196,34 +213,27 @@ export default async function Home() {
 
       {/* ------------------------------------------------------------ CTA final */}
       <section className="bg-noite-900">
-        <div className="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <h2 className="text-noite-50 text-[length:var(--text-h2)] font-semibold">
-            Ainda dá tempo de sair do aluguel este ano
-          </h2>
-          <p className="text-noite-300 mt-4 text-lg">
-            Mande uma mensagem e descubra em minutos quanto ficaria a sua parcela.
-          </p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <a
-              href={linkWhatsApp()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={buttonClasses("whatsapp", "lg")}
-            >
-              <MessageCircle className="size-4" aria-hidden />
-              Falar no WhatsApp
-            </a>
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.05fr]">
+          <div>
+            <p className="text-ouro-400 font-sans text-sm font-semibold tracking-[0.16em] uppercase">
+              Simulação gratuita
+            </p>
+            <h2 className="text-noite-50 mt-3 text-[length:var(--text-h2)] font-semibold">
+              Ainda dá tempo de sair do aluguel este ano
+            </h2>
+            <p className="text-noite-300 mt-4 max-w-xl text-lg leading-relaxed">
+              Deixe seu contato para o Cláudio verificar subsídio, entrada e uma parcela
+              possível para sua renda. Atendimento direto, sem call center.
+            </p>
             <Link
               href="/imoveis"
-              className={buttonClasses(
-                "outline",
-                "lg",
-                "border-noite-700 text-noite-100 hover:bg-noite-800",
-              )}
+              className="text-ouro-400 hover:text-ouro-300 mt-7 inline-flex items-center gap-2 font-sans text-sm font-semibold"
             >
-              Ver imóveis
+              Prefiro escolher um imóvel primeiro
+              <ArrowRight className="size-4" aria-hidden />
             </Link>
           </div>
+          <LeadForm />
         </div>
       </section>
     </>

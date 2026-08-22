@@ -2,14 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { Check, MapPin, MessageCircle } from "lucide-react";
+import { Check, MapPin } from "lucide-react";
 import { BadgeStatus, Badge } from "@/components/ui/Badge";
-import { buttonClasses } from "@/components/ui/Button";
+import { LeadForm } from "@/components/conversao/LeadForm";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { CardImovel } from "@/components/imovel/CardImovel";
 import { GaleriaImovel } from "@/components/imovel/GaleriaImovel";
 import { LocalizacaoImovel } from "@/components/imovel/LocalizacaoImovel";
 import { buscarImovel, buscarSlugsImoveis } from "@/lib/sanity/fetch";
-import { linkWhatsApp } from "@/lib/whatsapp";
 import { descreverQuartos } from "@/lib/utils";
 import { site } from "@/lib/site";
 import type { PortableTextBlock } from "next-sanity";
@@ -57,12 +57,6 @@ export default async function PaginaImovel({
   const imovel = await buscarImovel(slug);
   if (!imovel) notFound();
 
-  const ctaWhatsApp = linkWhatsApp({
-    tipo: "imovel",
-    nome: imovel.nome,
-    bairro: imovel.regiao.nome,
-  });
-
   const ficha = imovel.fichaTecnica;
   const linhasFicha = [
     ficha?.totalUnidades && ["Unidades", String(ficha.totalUnidades)],
@@ -75,6 +69,39 @@ export default async function PaginaImovel({
 
   return (
     <article>
+      <JsonLd
+        dados={{
+          "@context": "https://schema.org",
+          "@type": "ApartmentComplex",
+          name: imovel.nome,
+          url: `${site.url}/imovel/${imovel.slug}`,
+          image: [imovel.capa.url, ...(imovel.galeria ?? []).map((foto) => foto.url)],
+          description:
+            imovel.chamada ??
+            `${descreverQuartos(imovel.quartos)} em ${imovel.regiao.nome}`,
+          address: {
+            "@type": "PostalAddress",
+            streetAddress:
+              imovel.locais?.find((local) => local.tipo === "empreendimento")?.endereco ??
+              imovel.locais?.[0]?.endereco,
+            addressLocality: imovel.regiao.nome,
+            addressRegion: "RJ",
+            addressCountry: "BR",
+          },
+          ...(imovel.coordenadas
+            ? {
+                geo: {
+                  "@type": "GeoCoordinates",
+                  latitude: imovel.coordenadas.lat,
+                  longitude: imovel.coordenadas.lng,
+                },
+              }
+            : {}),
+          ...(imovel.fichaTecnica?.totalUnidades
+            ? { numberOfAccommodationUnits: imovel.fichaTecnica.totalUnidades }
+            : {}),
+        }}
+      />
       {/* Cabecalho */}
       <div className="mx-auto max-w-6xl px-4 pt-10 sm:px-6">
         <div className="flex flex-wrap items-center gap-2">
@@ -108,7 +135,7 @@ export default async function PaginaImovel({
 
       <div className="mx-auto mt-12 grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-3">
         {/* Coluna de conteudo */}
-        <div className="lg:col-span-2">
+        <div className="order-last lg:order-first lg:col-span-2">
           {imovel.descricao && imovel.descricao.length > 0 && (
             <section>
               <h2 className="text-noite-50 text-[length:var(--text-h3)] font-semibold">
@@ -242,17 +269,9 @@ export default async function PaginaImovel({
         </div>
 
         {/* Coluna de conversao — sticky no desktop */}
-        <aside className="lg:col-span-1">
-          <div className="border-noite-800 bg-noite-900 sticky top-24 rounded-[length:var(--radius-card)] border p-6 shadow-[var(--shadow-card)]">
-            <p className="font-display text-noite-50 text-xl font-semibold">
-              Consulte condições
-            </p>
-            <p className="text-noite-400 mt-2 text-sm leading-relaxed">
-              Valores, entrada e subsídio variam conforme a unidade e o seu perfil. O
-              Cláudio simula na hora, sem compromisso.
-            </p>
-
-            <dl className="border-noite-800 mt-5 space-y-2 border-t pt-5 text-sm">
+        <aside className="order-first lg:order-last lg:col-span-1">
+          <div className="sticky top-24 space-y-4">
+            <dl className="border-noite-800 bg-noite-900 space-y-2 rounded-[length:var(--radius-card)] border p-5 text-sm">
               <div className="flex justify-between gap-4">
                 <dt className="text-noite-500">Tipologias</dt>
                 <dd className="text-noite-100 font-medium">
@@ -274,17 +293,14 @@ export default async function PaginaImovel({
                 <dd className="text-noite-100 font-medium">{imovel.regiao.nome}</dd>
               </div>
             </dl>
-
-            <a
-              href={ctaWhatsApp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={buttonClasses("whatsapp", "lg", "mt-6 w-full")}
-            >
-              <MessageCircle className="size-4" aria-hidden />
-              Falar sobre este imóvel
-            </a>
-
+            <LeadForm
+              compacto
+              imovel={{
+                id: imovel.id,
+                nome: imovel.nome,
+                bairro: imovel.regiao.nome,
+              }}
+            />
             <p className="text-noite-400 mt-3 text-center font-sans text-xs">
               Resposta direta com o corretor · {site.creci}
             </p>

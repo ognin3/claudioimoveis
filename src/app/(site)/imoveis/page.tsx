@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description:
     "Apartamentos Minha Casa Minha Vida no Rio, Niterói, São Gonçalo e Baixada. " +
     "Filtre por bairro, quartos e situação da obra.",
+  alternates: { canonical: "/imoveis" },
 };
 
 /**

@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cláudio Corretor
 
-## Getting Started
+Site de captação de leads para imóveis Minha Casa Minha Vida no Grande Rio. A aplicação
+reúne 40 empreendimentos, catálogo com filtros, páginas individuais com mapa/fotos/plantas,
+CMS Sanity e integração preparada para Meta Pixel + Conversions API.
 
-First, run the development server:
+## Rodar localmente
+
+Requer Node.js 20 ou superior.
 
 ```bash
+npm install
+copy .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+O site abre em `http://localhost:3000` e o painel de conteúdo em
+`http://localhost:3000/studio`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Variáveis obrigatórias
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `NEXT_PUBLIC_SITE_URL`: endereço público final do site.
+- `NEXT_PUBLIC_SANITY_PROJECT_ID` e `NEXT_PUBLIC_SANITY_DATASET`: leitura do conteúdo.
+- `SANITY_API_WRITE_TOKEN`: gravação dos leads.
+- `SANITY_REVALIDATE_SECRET`: validação do webhook de publicação do Sanity.
 
-## Learn More
+Para anúncios no Meta, configurar também `NEXT_PUBLIC_META_PIXEL_ID` e
+`META_CAPI_ACCESS_TOKEN`. Para avisos por e-mail, configurar as três variáveis do Resend
+descritas em [.env.example](./.env.example).
 
-To learn more about Next.js, take a look at the following resources:
+## Verificação antes de publicar
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run typecheck
+npm run lint
+npm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Publicação
 
-## Deploy on Vercel
+Importar o repositório na Vercel, copiar as variáveis de `.env.local` para o ambiente de
+produção e trocar `NEXT_PUBLIC_SITE_URL` pela URL definitiva. Depois, cadastrar no Sanity o
+webhook `https://SEU-DOMINIO/api/revalidate` com o segredo de revalidação.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+As decisões, pendências externas e o estado detalhado do projeto ficam em
+[CLAUDE.md](./CLAUDE.md).

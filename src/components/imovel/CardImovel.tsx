@@ -24,11 +24,15 @@ import type { CardImovel as TipoCard } from "@/types/imovel";
 export function CardImovel({
   imovel,
   prioridade = false,
+  nivelTitulo = "h3",
 }: {
   imovel: TipoCard;
   /** Ligar apenas nos primeiros cards visiveis: eles costumam ser o LCP. */
   prioridade?: boolean;
+  /** No catalogo o card vem logo depois do h1; em secoes, depois de um h2. */
+  nivelTitulo?: "h2" | "h3";
 }) {
+  const Titulo = nivelTitulo;
   const area =
     imovel.areaMin && imovel.areaMax && imovel.areaMin !== imovel.areaMax
       ? `${imovel.areaMin} a ${imovel.areaMax} m²`
@@ -39,7 +43,7 @@ export function CardImovel({
   const vagas = imovel.vagasMax ?? null;
 
   return (
-    <article className="group border-noite-800 bg-noite-900 hover:border-noite-700 flex flex-col overflow-hidden rounded-[length:var(--radius-card)] border transition-colors">
+    <article className="group border-noite-800 bg-noite-900 hover:border-noite-700 relative flex flex-col overflow-hidden rounded-[length:var(--radius-card)] border transition-colors">
       {/* A foto inteira e link: e o alvo natural de clique num catalogo. */}
       <Link
         href={`/imovel/${imovel.slug}`}
@@ -55,6 +59,7 @@ export function CardImovel({
           placeholder={imovel.capa.lqip ? "blur" : "empty"}
           blurDataURL={imovel.capa.lqip ?? undefined}
           priority={prioridade}
+          quality={55}
           className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
         />
 
@@ -81,7 +86,7 @@ export function CardImovel({
           <span className="truncate">{imovel.regiao.nome}</span>
         </p>
 
-        <h3 className="mt-1.5 text-lg leading-snug font-semibold">
+        <Titulo className="mt-1.5 text-lg leading-snug font-semibold">
           {/* Link "esticado": o card inteiro fica clicavel sem aninhar <a> dentro de <a>. */}
           <Link
             href={`/imovel/${imovel.slug}`}
@@ -89,7 +94,7 @@ export function CardImovel({
           >
             {imovel.nome}
           </Link>
-        </h3>
+        </Titulo>
 
         {imovel.chamada && (
           <p className="text-noite-400 mt-1 line-clamp-2 text-sm">{imovel.chamada}</p>

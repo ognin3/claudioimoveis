@@ -27,6 +27,7 @@ export const metadata: Metadata = {
     template: `%s | ${site.nome}`,
   },
   description: site.descricaoCurta,
+  alternates: { canonical: "/" },
   applicationName: site.nome,
   authors: [{ name: site.nome }],
   openGraph: {
@@ -43,8 +44,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#142b36",
-  colorScheme: "light",
+  themeColor: "#0c0b0a",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
@@ -57,6 +58,9 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${fraunces.variable} ${inter.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
+      </head>
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );

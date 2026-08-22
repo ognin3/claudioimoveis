@@ -319,21 +319,40 @@ SANITY_API_WRITE_TOKEN          # server-only: grava lead
 SANITY_REVALIDATE_SECRET
 NEXT_PUBLIC_META_PIXEL_ID
 META_CAPI_ACCESS_TOKEN          # server-only
+META_GRAPH_API_VERSION
+META_CAPI_TEST_EVENT_CODE       # opcional
 RESEND_API_KEY                  # server-only
+RESEND_FROM_EMAIL
+LEAD_NOTIFICACAO_EMAIL
 ```
 
 ## 9. Estado atual
 
-Repositório **vazio** — nada implementado, ainda sem git (`git init` na Fase 1).
+Atualizado em **22/08/2026**.
 
-Fase 0 **parcialmente destravada**: planilha do corretor recebida em 28/07/2026 →
-**39 imóveis selecionados**, cruzados com o scrape em `docs/selecao-corretor.json`.
+- Site funcional em Next.js, com tema escuro, home, catálogo filtrável, páginas dedicadas,
+  galeria, plantas, mapa, política de privacidade e Studio Sanity embutido.
+- **40 imóveis publicados** no Sanity e **50 páginas de conteúdo** pré-renderizadas no build.
+- Correção aplicada no link esticado dos cards: filtros do catálogo não abrem mais imóveis.
+- Funil de lead concluído: formulário curto na home e em cada imóvel → grava no Sanity →
+  dispara `Lead` no Pixel/CAPI com deduplicação → página `/obrigado` → WhatsApp.
+- UTMs e `fbclid` persistem durante a navegação e são armazenados junto ao lead.
+- E-mail via Resend é opcional; falha de Meta/Resend nunca impede a gravação do lead.
+- SEO técnico presente: canonical, JSON-LD de corretor e empreendimento, sitemap e robots.
+- Build de produção, TypeScript e ESLint passam. Testes manuais cobriram desktop e mobile,
+  filtro, mapa, ausência de overflow horizontal, formulário e captura de campanha.
+- Lighthouse local mobile em produção: home chegou a **90/100 performance e 100/100 nas
+  demais categorias**; catálogo ficou em 100/100 nas categorias não relacionadas a
+  performance após as correções semânticas. O resultado de performance varia no ambiente
+  local e deve ser repetido no endereço final da Vercel.
 
-Material novo recebido em 28/07/2026 (`docs/MATERIAL-NOVO.md`): **bio ✅**, foto do corretor ✅
-(baixa resolução), books completos de **Conceito Califórnia (JV)** e **Conquista Parque
-Iguaçu (Direcional)**, ambos em Nova Iguaçu. Preço: decidido **não exibir**.
+### Bloqueios antes de ligar tráfego pago
 
-Ainda faltando: decisão sobre os 20 em branco (2 são Em Obras); de qual empreendimento são as
-5 fotos aéreas de obra; material de Recanto das Águas, Nova Zelândia e Rebouças; localização e
-book do Nova York; fotos do Completo Piedade e Urban Zona Norte; plantas do Origem Porto
-Imperial; autorização de uso das marcas.
+1. Definir `NEXT_PUBLIC_SITE_URL` com a URL final e publicar na Vercel.
+2. Informar `NEXT_PUBLIC_META_PIXEL_ID` e `META_CAPI_ACCESS_TOKEN`; validar em Eventos de
+   Teste no Meta antes de remover `META_CAPI_TEST_EVENT_CODE`.
+3. Configurar domínio verificado no Meta antes de investir verba relevante.
+4. Configurar Resend (`RESEND_API_KEY` e `RESEND_FROM_EMAIL`) ou aceitar leads apenas no
+   Studio + WhatsApp.
+5. Confirmar com o cliente o e-mail `claudioshema2009@gmail.com` e a autorização de uso das
+   marcas/fotos das construtoras.

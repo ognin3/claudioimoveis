@@ -295,7 +295,12 @@ export function Catalogo({
             <>
               <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {resultados.slice(0, visiveis).map((imovel, i) => (
-                  <CardImovel key={imovel.id} imovel={imovel} prioridade={i < 3} />
+                  <CardImovel
+                    key={imovel.id}
+                    imovel={imovel}
+                    prioridade={i === 0}
+                    nivelTitulo="h2"
+                  />
                 ))}
               </div>
 

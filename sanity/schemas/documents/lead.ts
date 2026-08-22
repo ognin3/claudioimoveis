@@ -67,6 +67,19 @@ export const lead = defineType({
       readOnly: true,
     }),
     defineField({
+      name: "consentidoEm",
+      title: "Consentimento LGPD em",
+      type: "datetime",
+      readOnly: true,
+    }),
+    defineField({
+      name: "eventId",
+      title: "ID do evento Meta",
+      type: "string",
+      readOnly: true,
+      description: "Usado para deduplicar Pixel e Conversions API.",
+    }),
+    defineField({
       name: "origem",
       title: "Origem do lead",
       type: "object",

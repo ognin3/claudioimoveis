@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFAB } from "@/components/layout/WhatsAppFAB";
+import { MetaPixel } from "@/components/conversao/MetaPixel";
 
 /**
  * Layout do site publico. Existe como route group `(site)` para que o Studio
@@ -13,6 +14,7 @@ export default function LayoutSite({ children }: { children: React.ReactNode }) 
       <main className="flex-1">{children}</main>
       <Footer />
       <WhatsAppFAB />
+      <MetaPixel />
     </>
   );
 }
