@@ -70,6 +70,15 @@ const nextConfig = {
 
   typedRoutes: true,
 
+  webpack(config, { isServer, dev }) {
+    // SWC/WASM na Hostinger falha ao concatenar os reexports de next/og.
+    // Mantem os modulos separados no servidor; o bundle do navegador nao muda.
+    if (isServer && !dev) {
+      config.optimization.concatenateModules = false;
+    }
+    return config;
+  },
+
   async headers() {
     return [
       {
