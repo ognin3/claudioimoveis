@@ -1,4 +1,6 @@
-import { ImageResponse } from "next/og";
+// O Webpack com fallback SWC/WASM nao resolve o reexport nomeado neste arquivo.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { ImageResponse } = require("next/og") as typeof import("next/og");
 
 export const alt = "Cláudio Corretor — Apartamentos Minha Casa Minha Vida no Rio";
 export const size = { width: 1200, height: 630 };
