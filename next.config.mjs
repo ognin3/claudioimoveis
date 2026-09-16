@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+// @ts-check
 
 const emDesenvolvimento = process.env.NODE_ENV === "development";
 
@@ -40,7 +40,8 @@ const cabecalhosStudio = [
   { key: "X-Content-Type-Options", value: "nosniff" },
 ];
 
-const nextConfig: NextConfig = {
+/** @type {import("next").NextConfig} */
+const nextConfig = {
   // Modelo de cache do Next 16: PPR por padrao, "use cache" + cacheTag/updateTag.
   // O conteudo vem do Sanity e muda pouco, entao quase tudo entra no shell estatico
   // e o webhook do Studio invalida por tag. Ver docs/PLANO-DE-ACAO.md Fase 3.
