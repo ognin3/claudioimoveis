@@ -8,6 +8,10 @@ Usuário confirmou https://github.com/ognin3/claudioimoveis e autorizou explicit
 
 Baseline falhou por Sanity project ID ausente. Identificadores públicos CI recuperados; build gerou artefatos e `npm run start` serviu catálogo real local. TypeScript/ESLint passaram. Provas e limites em DIAGNOSTICO-INICIAL.md; não equivalem ao ambiente Hostinger ou à recepção de contatos.
 
+## Publicação observada em 2026-09-29
+
+Commit de correção 7785e06 publicado com sucesso via push HEAD:master para https://github.com/ognin3/claudioimoveis.git, a partir de 7f63655. Após cerca de quatro minutos as respostas ainda estavam antigas; depois as rotas passaram a refletir as correções. HTTP200: home, contato e privacidade com canonical/OG próprios; imóvel Saudosa com og:url próprio; sitemap com59 URLs, sem privacidade e datas editoriais de agosto; robots permite leitura de obrigado e bloqueia /studio. Browser www/contato no celular exibiu autorização opcional desmarcada e botões Autorizar/Recusar marketing, sem overflow horizontal e sem erros JS registrados. Rota inexistente respondeu404 após push. Nenhum formulário enviado, nenhuma campanha ativada. Logs hPanel não acessíveis; GitHub CLI sem GH_TOKEN. Prova de implantação por comportamento público, não por status/logs internos nem recebimento de leads. Para reversão do código, revert de 7785e06 preserva os commits anteriores; não executado.
+
 ## Modalidade suportada
 
 [Hostinger Next.js](https://docs.hostinger.com/node.js/overview-1/next): app next, script build, saída .next, entry ignorado; standalone aplicado pela plataforma. [Build settings](https://docs.hostinger.com/node.js/build-settings): Node18/20/22/24 disponíveis, instalação/build limitados a15min cada. Usar Node24 como CI/local: dependências Sanity exigem>=22.12, requisito plataforma20+ é insuficiente para este grafo. Servidor obrigatório para actions, leads, webhook e Studio; upload estático não atende.
