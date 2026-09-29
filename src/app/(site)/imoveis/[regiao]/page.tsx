@@ -33,12 +33,15 @@ export async function generateMetadata({
     description: descricao,
     alternates: { canonical: `/imoveis/${regiao.slug}` },
     openGraph: {
+      type: "website",
+      locale: site.locale,
+      siteName: site.nome,
       title: `${titulo} — ${site.nome}`,
       description: descricao,
       url: `/imoveis/${regiao.slug}`,
       images: regiao.imoveis[0]?.capa.url
         ? [{ url: regiao.imoveis[0].capa.url }]
-        : undefined,
+        : [{ url: "/opengraph-image", alt: site.nome }],
     },
   };
 }

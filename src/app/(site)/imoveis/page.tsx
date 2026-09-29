@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Catalogo } from "@/components/catalogo/Catalogo";
 import { SkeletonCardImovel } from "@/components/ui/Skeleton";
 import { buscarConstrutoras, buscarImoveis, buscarRegioes } from "@/lib/sanity/fetch";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Imóveis à venda no Rio de Janeiro",
@@ -10,6 +11,17 @@ export const metadata: Metadata = {
     "Apartamentos Minha Casa Minha Vida no Rio, Niterói, São Gonçalo e Baixada. " +
     "Filtre por bairro, quartos e situação da obra.",
   alternates: { canonical: "/imoveis" },
+  openGraph: {
+    type: "website",
+    locale: site.locale,
+    siteName: site.nome,
+    title: "Imóveis à venda no Rio de Janeiro",
+    description:
+      "Apartamentos Minha Casa Minha Vida no Rio, Niterói, São Gonçalo e Baixada. " +
+      "Filtre por bairro, quartos e situação da obra.",
+    url: "/imoveis",
+    images: [{ url: "/opengraph-image", alt: site.nome }],
+  },
 };
 
 /**

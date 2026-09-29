@@ -42,9 +42,13 @@ export async function generateMetadata({
     description: descricao,
     alternates: { canonical: `/imovel/${imovel.slug}` },
     openGraph: {
+      type: "website",
+      locale: site.locale,
+      siteName: site.nome,
+      url: `/imovel/${imovel.slug}`,
       title: titulo,
       description: descricao,
-      images: [{ url: imagem, width: 1200, height: 630 }],
+      images: [{ url: imagem, alt: imovel.nome }],
     },
   };
 }

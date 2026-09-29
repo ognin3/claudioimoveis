@@ -10,6 +10,16 @@ export const metadata: Metadata = {
   description:
     "Fale diretamente com Cláudio Corretor sobre apartamentos e lançamentos no Rio de Janeiro.",
   alternates: { canonical: "/contato" },
+  openGraph: {
+    type: "website",
+    locale: site.locale,
+    siteName: site.nome,
+    title: "Contato",
+    description:
+      "Fale diretamente com Cláudio Corretor sobre apartamentos e lançamentos no Rio de Janeiro.",
+    url: "/contato",
+    images: [{ url: "/opengraph-image", alt: site.nome }],
+  },
 };
 
 export default function PaginaContato() {

@@ -8,6 +8,7 @@ import { queryControlesTaxaExpirados, queryImovelParaLead } from "@/lib/sanity/q
 import { enviarLeadMeta } from "@/lib/meta/capi";
 import { linkWhatsApp } from "@/lib/whatsapp";
 import { site } from "@/lib/site";
+import { limparAtribuicao, limparPagina } from "@/lib/meta/attribution";
 
 export type EstadoLead = {
   sucesso?: boolean;
@@ -15,6 +16,7 @@ export type EstadoLead = {
   erros?: Partial<Record<"nome" | "whatsapp" | "email" | "consentimento", string>>;
   eventId?: string;
   whatsappUrl?: string;
+  marketingAutorizado?: boolean;
 };
 
 const esquema = z.object({
@@ -35,6 +37,7 @@ const esquema = z.object({
       "Digite um e-mail válido.",
     ),
   consentimento: z.literal("on", { error: "Autorize o contato para continuar." }),
+  marketing: z.enum(["granted-v1", "denied"]).catch("denied"),
   imovelId: z
     .string()
     .trim()
@@ -109,20 +112,6 @@ async function excedeuLimitePersistente(
   return (controle?.tentativas ?? 6) > 5;
 }
 
-function paginaConfiavel(valor: string) {
-  const urlBase = new URL(site.url);
-  try {
-    const url = new URL(valor, urlBase);
-    const localEmDesenvolvimento =
-      process.env.NODE_ENV !== "production" &&
-      ["localhost", "127.0.0.1"].includes(url.hostname);
-    return url.origin === urlBase.origin || localEmDesenvolvimento
-      ? url.toString()
-      : urlBase.toString();
-  } catch {
-    return urlBase.toString();
-  }
-}
 
 function campos(formData: FormData) {
   const texto = (nome: string) => String(formData.get(nome) ?? "");
@@ -131,6 +120,7 @@ function campos(formData: FormData) {
     whatsapp: texto("whatsapp"),
     email: texto("email"),
     consentimento: texto("consentimento"),
+    marketing: texto("marketing"),
     imovelId: texto("imovelId") || undefined,
     imovelNome: texto("imovelNome") || undefined,
     imovelBairro: texto("imovelBairro") || undefined,
@@ -210,16 +200,9 @@ export async function cadastrarLead(
 
   const agora = new Date().toISOString();
   const eventId = randomUUID();
-  const pagina = paginaConfiavel(dados.pagina);
-  const origem = {
-    pagina,
-    utmSource: dados.utmSource,
-    utmMedium: dados.utmMedium,
-    utmCampaign: dados.utmCampaign,
-    utmContent: dados.utmContent,
-    utmTerm: dados.utmTerm,
-    fbclid: dados.fbclid,
-  };
+  const pagina = limparPagina(dados.pagina, site.url);
+  const marketingAutorizado = dados.marketing === "granted-v1";
+  const origem = { pagina, ...(marketingAutorizado ? limparAtribuicao(dados) : {}) };
 
   try {
     await cliente.create({
@@ -233,6 +216,7 @@ export async function cadastrarLead(
       status: "novo",
       criadoEm: agora,
       consentidoEm: agora,
+      marketing: { autorizado: marketingAutorizado, versao: "v1", registradoEm: agora },
       eventId,
       origem,
     });
@@ -241,9 +225,19 @@ export async function cadastrarLead(
     return { mensagem: "Não foi possível enviar agora. Tente novamente pelo WhatsApp." };
   }
 
-  const cookieStore = await cookies();
   const tarefas: Promise<unknown>[] = [
-    enviarLeadMeta({
+    notificarLead({
+      nome: dados.nome,
+      whatsapp: dados.whatsapp,
+      email: dados.email || undefined,
+      imovel: imovel?.nome,
+      pagina,
+    }),
+  ];
+  if (marketingAutorizado) {
+    const cookieStore = await cookies();
+    tarefas.push(enviarLeadMeta({
+      marketingAutorizado: true,
       eventId,
       url: pagina,
       telefone: dados.whatsapp,
@@ -253,15 +247,8 @@ export async function cadastrarLead(
       fbp: cookieStore.get("_fbp")?.value,
       fbc: cookieStore.get("_fbc")?.value,
       imovel: imovel?.nome,
-    }),
-    notificarLead({
-      nome: dados.nome,
-      whatsapp: dados.whatsapp,
-      email: dados.email || undefined,
-      imovel: imovel?.nome,
-      pagina,
-    }),
-  ];
+    }));
+  }
   const resultados = await Promise.allSettled(tarefas);
   resultados.forEach((resultado) => {
     if (resultado.status === "rejected")
@@ -271,6 +258,7 @@ export async function cadastrarLead(
   return {
     sucesso: true,
     eventId,
+    marketingAutorizado,
     whatsappUrl: linkWhatsApp(
       imovel
         ? { tipo: "imovel", nome: imovel.nome, bairro: imovel.bairro }

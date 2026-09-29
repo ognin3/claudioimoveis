@@ -7,6 +7,7 @@ import { linkWhatsApp } from "@/lib/whatsapp";
 
 export const metadata: Metadata = {
   title: "Contato recebido",
+  alternates: { canonical: "/obrigado" },
   robots: { index: false, follow: false },
 };
 

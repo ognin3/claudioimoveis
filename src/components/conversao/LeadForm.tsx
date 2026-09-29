@@ -10,6 +10,8 @@ import { InputField } from "@/components/ui/Input";
 import { buttonClasses } from "@/components/ui/Button";
 import { dispararLeadMeta } from "@/lib/meta/pixel";
 import { cn } from "@/lib/utils";
+import { CHAVE_ATRIBUICAO, EVENTO_MARKETING, escolherMarketing, marketingAutorizado } from "@/lib/meta/consent";
+import { limparAtribuicao, limparPagina } from "@/lib/meta/attribution";
 
 const estadoInicial: EstadoLead = {};
 
@@ -22,6 +24,7 @@ type LeadFormProps = {
 export function LeadForm({ imovel, compacto = false, className }: LeadFormProps) {
   const [estado, action, pending] = useActionState(cadastrarLead, estadoInicial);
   const [telefone, setTelefone] = useState("");
+  const [marketing, setMarketing] = useState(false);
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const iniciadoEmRef = useRef<HTMLInputElement>(null);
@@ -31,32 +34,21 @@ export function LeadForm({ imovel, compacto = false, className }: LeadFormProps)
     const form = formRef.current;
     if (!form) return;
     if (iniciadoEmRef.current) iniciadoEmRef.current.value = String(Date.now());
-    const params = new URLSearchParams(window.location.search);
-    const campos = {
-      utm_source: "utmSource",
-      utm_medium: "utmMedium",
-      utm_campaign: "utmCampaign",
-      utm_content: "utmContent",
-      utm_term: "utmTerm",
-      fbclid: "fbclid",
-    } as const;
-
-    Object.entries(campos).forEach(([chave, nomeCampo]) => {
-      const atual = params.get(chave);
-      if (atual) sessionStorage.setItem(chave, atual);
-      const valor = atual ?? sessionStorage.getItem(chave) ?? "";
-      const input = form.elements.namedItem(nomeCampo) as HTMLInputElement | null;
-      if (input) input.value = valor;
-    });
-    const pagina = form.elements.namedItem("pagina") as HTMLInputElement | null;
-    if (pagina) pagina.value = window.location.href;
+    const atualizar = () => setMarketing(marketingAutorizado());
+    atualizar();
+    window.addEventListener(EVENTO_MARKETING, atualizar);
+    window.addEventListener("storage", atualizar);
+    return () => {
+      window.removeEventListener(EVENTO_MARKETING, atualizar);
+      window.removeEventListener("storage", atualizar);
+    };
   }, []);
 
   useEffect(() => {
     if (!estado.sucesso || !estado.eventId || !estado.whatsappUrl || redirecionou.current)
       return;
     redirecionou.current = true;
-    dispararLeadMeta(estado.eventId, imovel?.nome);
+    if (estado.marketingAutorizado) dispararLeadMeta(estado.eventId, imovel?.nome);
     const params = new URLSearchParams({ whatsapp: estado.whatsappUrl });
     if (imovel?.nome) params.set("imovel", imovel.nome);
     router.push(`/obrigado?${params.toString()}` as Route);
@@ -66,6 +58,28 @@ export function LeadForm({ imovel, compacto = false, className }: LeadFormProps)
     <form
       ref={formRef}
       action={action}
+      onSubmit={() => {
+        const form = formRef.current;
+        if (!form) return;
+        const autorizado = marketingAutorizado();
+        let salvo: Record<string, unknown> = {};
+        if (autorizado) {
+          try { salvo = JSON.parse(sessionStorage.getItem(CHAVE_ATRIBUICAO) ?? "{}"); }
+          catch { /* Atribuição inválida é descartada. */ }
+        }
+        const params = new URLSearchParams(location.search);
+        const campanhaAtual = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid"].some((chave) => params.has(chave));
+        const atribuicao = autorizado ? limparAtribuicao(campanhaAtual ? {
+          utmSource: params.get("utm_source"), utmMedium: params.get("utm_medium"),
+          utmCampaign: params.get("utm_campaign"), utmContent: params.get("utm_content"), fbclid: params.get("fbclid"),
+        } : salvo) : {};
+        for (const nome of ["utmSource", "utmMedium", "utmCampaign", "utmContent", "utmTerm", "fbclid"]) {
+          const input = form.elements.namedItem(nome) as HTMLInputElement;
+          input.value = atribuicao[nome as keyof typeof atribuicao] ?? "";
+        }
+        (form.elements.namedItem("marketing") as HTMLInputElement).value = autorizado ? "granted-v1" : "denied";
+        (form.elements.namedItem("pagina") as HTMLInputElement).value = limparPagina(location.href, location.origin);
+      }}
       className={cn(
         "border-noite-800 bg-noite-900 rounded-[length:var(--radius-card)] border",
         compacto ? "p-5" : "p-6 sm:p-8",
@@ -123,6 +137,7 @@ export function LeadForm({ imovel, compacto = false, className }: LeadFormProps)
 
       <input ref={iniciadoEmRef} type="hidden" name="iniciadoEm" />
       <input type="hidden" name="pagina" />
+      <input type="hidden" name="marketing" />
       <input type="hidden" name="utmSource" />
       <input type="hidden" name="utmMedium" />
       <input type="hidden" name="utmCampaign" />
@@ -160,6 +175,10 @@ export function LeadForm({ imovel, compacto = false, className }: LeadFormProps)
           {estado.erros.consentimento}
         </p>
       )}
+      <label className="text-noite-300 mt-4 flex min-h-11 cursor-pointer items-start gap-3 text-xs leading-relaxed">
+        <input type="checkbox" checked={marketing} onChange={(e) => escolherMarketing(e.target.checked)} className="accent-ouro-400 mt-0.5 size-4 shrink-0" />
+        <span>Opcional: autorizo cookies e envio à Meta de identificadores de contato e navegação para medir anúncios. Recusar não impede o contato. Posso alterar a escolha nas preferências de privacidade.</span>
+      </label>
 
       {estado.mensagem && (
         <p className="text-ouro-300 mt-4 font-sans text-sm" role="alert">
@@ -187,7 +206,7 @@ export function LeadForm({ imovel, compacto = false, className }: LeadFormProps)
 
       <p className="text-noite-500 mt-3 flex items-center justify-center gap-1.5 text-center font-sans text-xs">
         <CheckCircle2 className="text-ouro-400 size-3.5" aria-hidden />
-        Seus dados não serão compartilhados com terceiros.
+        Contato protegido; marketing só com sua autorização.
       </p>
     </form>
   );

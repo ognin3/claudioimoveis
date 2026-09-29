@@ -69,9 +69,21 @@ export const lead = defineType({
     }),
     defineField({
       name: "consentidoEm",
-      title: "Consentimento LGPD em",
+      title: "Autorização de contato em",
       type: "datetime",
       readOnly: true,
+    }),
+    defineField({
+      name: "marketing",
+      title: "Escolha de marketing no cadastro",
+      type: "object",
+      readOnly: true,
+      description: "Declaração do navegador neste envio; não é histórico de escolhas anteriores.",
+      fields: [
+        defineField({ name: "autorizado", title: "Autorizado", type: "boolean" }),
+        defineField({ name: "versao", title: "Versão do termo", type: "string" }),
+        defineField({ name: "registradoEm", title: "Registrado em", type: "datetime" }),
+      ],
     }),
     defineField({
       name: "eventId",
@@ -92,7 +104,6 @@ export const lead = defineType({
         defineField({ name: "utmMedium", title: "utm_medium", type: "string" }),
         defineField({ name: "utmCampaign", title: "utm_campaign", type: "string" }),
         defineField({ name: "utmContent", title: "utm_content", type: "string" }),
-        defineField({ name: "utmTerm", title: "utm_term", type: "string" }),
         defineField({ name: "fbclid", title: "fbclid", type: "string" }),
       ],
     }),

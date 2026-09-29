@@ -85,6 +85,18 @@ export const querySlugsImoveis = defineQuery(/* groq */ `
   *[_type == "imovel" && publicado == true].slug.current
 `);
 
+/** Datas editoriais reais, sem carregar o catálogo no sitemap. */
+export const queryDocumentosSitemap = defineQuery(/* groq */ `{
+  "imoveis": *[_type == "imovel" && publicado == true] {
+    "slug": slug.current,
+    _updatedAt
+  },
+  "regioes": *[_type == "regiao" && count(*[_type == "imovel" && publicado == true && regiao._ref == ^._id]) > 0] {
+    "slug": slug.current,
+    _updatedAt
+  }
+}`);
+
 /** Regiões que têm ao menos um imóvel publicado — alimenta o filtro e as rotas por região. */
 export const queryRegioes = defineQuery(/* groq */ `
   *[_type == "regiao" && count(*[_type == "imovel" && publicado == true && regiao._ref == ^._id]) > 0]

@@ -1,8 +1,11 @@
 import "server-only";
 
 import { createHash } from "node:crypto";
+import { limparPagina } from "./attribution";
+import { site } from "@/lib/site";
 
 type EventoLeadMeta = {
+  marketingAutorizado: boolean;
   eventId: string;
   url: string;
   telefone: string;
@@ -23,6 +26,7 @@ function sha256(valor: string) {
  * faz a deduplicacao no Meta: uma conversao, mesmo chegando por Pixel e CAPI.
  */
 export async function enviarLeadMeta(evento: EventoLeadMeta): Promise<void> {
+  if (!evento.marketingAutorizado) return;
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
   const token = process.env.META_CAPI_ACCESS_TOKEN;
   if (!pixelId || !token) return;
@@ -33,8 +37,8 @@ export async function enviarLeadMeta(evento: EventoLeadMeta): Promise<void> {
   if (evento.email) userData.em = [sha256(evento.email)];
   if (evento.ip) userData.client_ip_address = evento.ip;
   if (evento.userAgent) userData.client_user_agent = evento.userAgent;
-  if (evento.fbp) userData.fbp = evento.fbp;
-  if (evento.fbc) userData.fbc = evento.fbc;
+  if (evento.fbp && /^fb\.\d\.\d{10,16}\.\d+$/.test(evento.fbp)) userData.fbp = evento.fbp;
+  if (evento.fbc && /^fb\.\d\.\d{10,16}\.[A-Za-z0-9_-]{20,500}$/.test(evento.fbc)) userData.fbc = evento.fbc;
 
   const payload: Record<string, unknown> = {
     data: [
@@ -42,7 +46,7 @@ export async function enviarLeadMeta(evento: EventoLeadMeta): Promise<void> {
         event_name: "Lead",
         event_time: Math.floor(Date.now() / 1000),
         event_id: evento.eventId,
-        event_source_url: evento.url,
+        event_source_url: limparPagina(evento.url, site.url),
         action_source: "website",
         user_data: userData,
         custom_data: {

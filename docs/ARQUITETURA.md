@@ -45,7 +45,7 @@ Principais ilhas client-side:
 - `Catalogo.tsx`: filtros, ordenação e quantidade de resultados.
 - Galeria e visualizador de plantas: navegação e modal acessível.
 - Formulários de lead: estado de envio, mensagens e redirecionamento.
-- `MetaPixel.tsx`: carregamento tardio e evento do navegador.
+- `MetaPixel.tsx`: escolha opcional de marketing persistida; carregamento e eventos somente após autorização, com revogação e URLs/atribuição limitadas ao contrato público.
 - Componentes de movimento: `IntersectionObserver` e scroll progressivo.
 
 Essa fronteira reduz JavaScript inicial e preserva o desempenho mobile.
@@ -81,15 +81,15 @@ todo o cache.
 ## 5. Fluxo completo do lead
 
 1. O visitante chega por uma página ou anúncio com UTMs e, quando aplicável, `fbclid`.
-2. Os parâmetros são preservados durante a navegação.
+2. Após autorização opcional de marketing, somente UTMs aprovadas e IDs numéricos de campanha/criativo são preservados; novas campanhas substituem o conjunto anterior. Recusa não bloqueia contato.
 3. O formulário envia os dados para `src/app/(site)/actions/lead.ts`.
 4. O servidor identifica a origem da requisição e aplica limite de tentativas.
 5. Zod normaliza nome, telefone, e-mail, consentimento e campos de campanha.
 6. Honeypot e tempo de preenchimento rejeitam automação simples.
 7. Se houver imóvel, o servidor consulta o Sanity e ignora nome/bairro enviados pelo cliente.
-8. A página de origem é aceita somente quando pertence ao próprio site.
-9. O lead é criado como `drafts.lead.<eventId>` no Sanity.
-10. Meta CAPI e Resend são executados em paralelo, com timeout.
+8. A origem aceita apenas rotas públicas do próprio site, sem query ou fragmento.
+9. O lead é criado como `drafts.lead.<eventId>` no Sanity com autorização de contato e declaração versionada/datada de marketing.
+10. Resend e, somente com autorização de marketing, Meta CAPI são executados com timeout.
 11. O navegador recebe apenas sucesso, `eventId` e a URL segura do WhatsApp.
 
 O lead é salvo antes das integrações. Assim, uma indisponibilidade do Meta ou do e-mail não
@@ -102,9 +102,7 @@ O evento `Lead` pode chegar por duas fontes:
 - navegador, pelo Pixel;
 - servidor, pela Conversions API.
 
-As duas usam o mesmo `eventID`, permitindo deduplicação no Events Manager. Telefone e
-e-mail são normalizados e transformados em SHA-256 antes do envio server-side. Token da CAPI
-nunca é incluído no bundle público.
+As duas usam o mesmo `eventID`, permitindo deduplicação no Events Manager, que exige validação externa. Pixel e CAPI dependem da autorização opcional de marketing. Telefone e e-mail são normalizados e transformados em SHA-256 para correspondência; isso não os torna anônimos. IP, user-agent e identificadores de cookies podem ser enviados em claro à Meta. Token da CAPI nunca é incluído no bundle público. Revogar bloqueia eventos futuros; não apaga dados já enviados.
 
 ## 7. Imagens
 
@@ -132,7 +130,7 @@ Controles expirados são removidos gradualmente.
 
 ### Navegador e rede
 
-`next.config.ts` aplica CSP, HSTS, Referrer Policy, Permissions Policy, proteção contra
+`next.config.mjs` aplica CSP, HSTS, Referrer Policy, Permissions Policy, proteção contra
 clickjacking e MIME sniffing. O Studio recebe um conjunto reduzido porque autenticação e
 previews possuem necessidades próprias.
 

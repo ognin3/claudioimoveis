@@ -6,6 +6,12 @@ import type { StatusImovel } from "@/components/ui/Badge";
  * projecoes de src/lib/sanity/queries.ts — mudar a query obriga a mudar aqui.
  */
 
+/** Projeção exclusiva do sitemap; datas mantidas pelo Sanity. */
+export type DocumentosSitemap = {
+  imoveis: Array<{ slug: string; _updatedAt: string }>;
+  regioes: Array<{ slug: string; _updatedAt: string }>;
+};
+
 export type ZonaSlug =
   | "zona-portuaria"
   | "zona-norte"

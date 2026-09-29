@@ -7,6 +7,7 @@ import type {
   Configuracoes,
   ConstrutoraResumo,
   Depoimento,
+  DocumentosSitemap,
   ImovelCompleto,
   RegiaoComImoveis,
   RegiaoResumo,
@@ -49,6 +50,13 @@ export async function buscarSlugsImoveis(): Promise<string[]> {
   cacheLife("max");
   cacheTag(tags.imoveis);
   return sanityClient.fetch(q.querySlugsImoveis);
+}
+
+export async function buscarDocumentosSitemap(): Promise<DocumentosSitemap> {
+  "use cache";
+  cacheLife("max");
+  cacheTag(tags.imoveis, tags.regioes);
+  return sanityClient.fetch(q.queryDocumentosSitemap);
 }
 
 export async function buscarRegioes(): Promise<RegiaoResumo[]> {

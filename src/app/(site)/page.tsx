@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Route } from "next";
+import type { Metadata, Route } from "next";
 import {
   ArrowRight,
   AtSign,
@@ -23,6 +23,19 @@ import {
 } from "@/lib/sanity/fetch";
 import { linkWhatsApp } from "@/lib/whatsapp";
 import { site } from "@/lib/site";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: site.locale,
+    siteName: site.nome,
+    title: `${site.nome} — Apartamentos Minha Casa Minha Vida no Rio de Janeiro`,
+    description: site.descricaoCurta,
+    url: "/",
+    images: [{ url: "/opengraph-image", alt: site.nome }],
+  },
+};
 
 export default async function Home() {
   const [destaques, regioes, configuracoes] = await Promise.all([

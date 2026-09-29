@@ -46,10 +46,10 @@ O e-mail informado originalmente terminava em `.co`; assumido `.com` (typo).
 | CMS        | **Sanity** (Studio embutido em `/studio`, locale `pt-BR`) | Corretor edita sozinho; CDN de imagem resolve os 641 MB |
 | Imagens    | `next/image` + loader do Sanity CDN                       | AVIF/WebP + resize sob demanda                          |
 | Formulário | Server Actions + **Zod**                                  | Sem API pública exposta, validação compartilhada        |
-| Rastreio   | **Meta Pixel + Conversions API** (dedup por `eventID`)    | CAPI é a fonte primária; Pixel é secundário             |
+| Rastreio   | **Meta Pixel + Conversions API** (dedup por `eventID`)    | Ambos exigem autorização opcional de marketing, separada do contato |
 | E-mail     | **Resend**                                                | Notifica o corretor a cada lead                         |
-| Hospedagem | **Vercel** (`*.vercel.app` por ora)                       | Deploy nativo Next; domínio próprio depois              |
-| Testes     | **Vitest** (unit) + **Playwright** (smoke E2E)            | Cobrir normalizador e funil de lead                     |
+| Hospedagem | **Hostinger Node.js** (destino real pendente de confirmação) | Preservar compatibilidade; sem push/deploy antes de validar hPanel |
+| Verificação | TypeScript, ESLint, build e smoke real | Vitest/Playwright não instalados; não alegar suíte inexistente |
 | Scripts    | **Node/TS** + `sharp` + `@sanity/client`                  | Import e otimização de imagem                           |
 | Scrape     | **Python** — permanece em `C:\projetos\scrapping-curry`   | Só para re-scrape futuro. **Não** entra neste repo      |
 
@@ -280,12 +280,12 @@ Para editar arquivo de env por script, use `[System.IO.File]::WriteAllText` com
 - "Imagens meramente ilustrativas" nas galerias e plantas.
 - `legal_text` de cada imóvel (registro de incorporação) — já existe no scrape, exibir na
   página do imóvel.
-- LGPD: consentimento explícito no formulário + página de política de privacidade.
-  O lead é dado pessoal, fica como draft privado no Sanity e vai para Meta CAPI hasheado.
+- LGPD: autorização de contato no formulário e marketing opcional separado + política factual.
+  O lead fica como draft privado no Sanity; CAPI somente autorizada, com telefone/e-mail em hash e IP/user-agent/cookies que podem ser enviados em claro. Hash não é anonimização.
 - A Server Action valida o imóvel novamente no Sanity, aceita apenas URL de origem do próprio
   site, rejeita preenchimento automatizado e aplica limite persistente por HMAC do IP.
 - Não remover CSP, HSTS, `nosniff`, proteção contra iframe e políticas de permissões de
-  `next.config.ts`. O Studio tem cabeçalhos próprios para não quebrar autenticação/previews.
+  `next.config.mjs`. O Studio tem cabeçalhos próprios para não quebrar autenticação/previews.
 
 ---
 
@@ -363,9 +363,8 @@ Atualizado em **22/08/2026**.
   reduzindo o excesso visual da coluna de filtros no desktop e no mobile.
 - **40 imóveis publicados** no Sanity e **72 rotas** geradas no build de produção.
 - Correção aplicada no link esticado dos cards: filtros do catálogo não abrem mais imóveis.
-- Funil de lead concluído: formulário curto na home e em cada imóvel → grava no Sanity →
-  dispara `Lead` no Pixel/CAPI com deduplicação → página `/obrigado` → WhatsApp.
-- UTMs e `fbclid` persistem durante a navegação e são armazenados junto ao lead.
+- Funil: formulário curto na home e em cada imóvel → draft privado Sanity → `/obrigado` → WhatsApp. Eventos Pixel/CAPI somente com autorização opcional de marketing; mesmo eventID para deduplicação, cuja recepção externa ainda precisa ser validada.
+- Atribuição preserva somente campos aprovados após autorização; IDs de campanhas/criativos exigem aprovação explícita. Escolha de marketing versionada/datada registrada no draft. Recusa não bloqueia contato.
 - E-mail via Resend é opcional; falha de Meta/Resend nunca impede a gravação do lead.
 - SEO/AEO/GEO presente: metadados únicos, imagem social, canonical, JSON-LD, FAQ visível,
   páginas regionais, sitemap, robots e `llms.txt` com todos os empreendimentos.

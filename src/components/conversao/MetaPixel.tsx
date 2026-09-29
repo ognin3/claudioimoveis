@@ -1,44 +1,82 @@
 "use client";
 
-import Script from "next/script";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { CHAVE_MARKETING, CHAVE_ATRIBUICAO, EVENTO_MARKETING, escolherMarketing, marketingAutorizado } from "@/lib/meta/consent";
+import { limparAtribuicao, paginaSeguraParaPixel, referenciaSeguraParaPixel } from "@/lib/meta/attribution";
+import { buttonClasses } from "@/components/ui/Button";
+import "@/lib/meta/pixel";
 
 export function MetaPixel() {
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
   const pathname = usePathname();
-  const primeira = useRef(true);
+  const [escolha, setEscolha] = useState<string | null>(null);
+  const ultimaPaginaRastreada = useRef<string | null>(null);
 
   useEffect(() => {
-    if (primeira.current) {
-      primeira.current = false;
+    const atualizar = () => {
+      try { setEscolha(localStorage.getItem(CHAVE_MARKETING) ?? "unknown"); }
+      catch { setEscolha("denied"); }
+    };
+    atualizar();
+    window.addEventListener(EVENTO_MARKETING, atualizar);
+    window.addEventListener("storage", atualizar);
+    return () => {
+      window.removeEventListener(EVENTO_MARKETING, atualizar);
+      window.removeEventListener("storage", atualizar);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (escolha === null) return;
+    if (!marketingAutorizado()) {
+      window.fbq?.("consent", "revoke");
       return;
     }
-    window.fbq?.("track", "PageView");
-  }, [pathname]);
-
-  if (!pixelId) return null;
+    const params = new URLSearchParams(window.location.search);
+    if (["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid"].some((chave) => params.has(chave))) {
+      const atribuicao = limparAtribuicao({
+        utmSource: params.get("utm_source"), utmMedium: params.get("utm_medium"),
+        utmCampaign: params.get("utm_campaign"), utmContent: params.get("utm_content"), fbclid: params.get("fbclid"),
+      });
+      try { sessionStorage.setItem(CHAVE_ATRIBUICAO, JSON.stringify(atribuicao)); }
+      catch { /* Sem armazenamento, não persistir atribuição. */ }
+    }
+    // Pixel pode ler a URL inteira: permitir somente rotas e parâmetros aprovados.
+    // Referrer também precisa ser seguro antes de carregar o SDK.
+    if (!pixelId || !/^\d+$/.test(pixelId) || !referenciaSeguraParaPixel(document.referrer, location.origin) || !paginaSeguraParaPixel(location.href, location.origin)) {
+      window.fbq?.("consent", "revoke");
+      return;
+    }
+    if (!window.fbq) {
+      const fila: unknown[][] = [];
+      const fbq = Object.assign((...args: unknown[]) => {
+        if (fbq.callMethod) fbq.callMethod(...args);
+        else fila.push(args);
+      }, { queue: fila, loaded: true, version: "2.0", callMethod: undefined as ((...args: unknown[]) => void) | undefined });
+      window.fbq = fbq;
+      window._fbq = fbq;
+      fbq("consent", "grant");
+      fbq("set", "autoConfig", false, pixelId);
+      fbq("init", pixelId);
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://connect.facebook.net/en_US/fbevents.js";
+      document.head.appendChild(script);
+    } else window.fbq("consent", "grant");
+    if (ultimaPaginaRastreada.current !== location.href) {
+      window.fbq("track", "PageView");
+      ultimaPaginaRastreada.current = location.href;
+    }
+  }, [pathname, escolha, pixelId]);
 
   return (
-    <>
-      <Script id="meta-pixel" strategy="afterInteractive">
-        {`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?` +
-          `n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;` +
-          `n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;` +
-          `t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,` +
-          `document,'script','https://connect.facebook.net/en_US/fbevents.js');` +
-          `fbq('init','${pixelId}');fbq('track','PageView');`}
-      </Script>
-      <noscript>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          height="1"
-          width="1"
-          className="hidden"
-          alt=""
-          src={`https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1`}
-        />
-      </noscript>
-    </>
+    <aside aria-label="Preferências de privacidade" className="border-noite-800 bg-noite-900 border-t px-4 py-4 text-sm text-noite-300">
+      <p>{escolha === null || escolha === "unknown" ? "Marketing opcional: autoriza a Meta a medir anúncios com cookies e dados de contato? Você pode solicitar contato sem autorizar." : `Marketing ${escolha === "granted" ? "autorizado" : "recusado"}. Altere sua escolha a qualquer momento.`} <a href="/privacidade" className="text-ouro-400 underline">Privacidade</a></p>
+      <div className="mt-3 flex flex-wrap gap-3">
+        <button type="button" className={buttonClasses("primary", "md")} onClick={() => escolherMarketing(true)}>Autorizar marketing</button>
+        <button type="button" className={buttonClasses("outline", "md")} onClick={() => escolherMarketing(false)}>Recusar marketing</button>
+      </div>
+    </aside>
   );
 }

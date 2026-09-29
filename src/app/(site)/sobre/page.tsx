@@ -13,6 +13,16 @@ export const metadata: Metadata = {
   description:
     "Conheça Cláudio, corretor credenciado no Rio de Janeiro e especialista em imóveis Minha Casa Minha Vida.",
   alternates: { canonical: "/sobre" },
+  openGraph: {
+    type: "website",
+    locale: site.locale,
+    siteName: site.nome,
+    title: "Sobre o Cláudio",
+    description:
+      "Conheça Cláudio, corretor credenciado no Rio de Janeiro e especialista em imóveis Minha Casa Minha Vida.",
+    url: "/sobre",
+    images: [{ url: "/opengraph-image", alt: site.nome }],
+  },
 };
 
 export default async function PaginaSobre() {
