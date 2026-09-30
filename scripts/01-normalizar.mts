@@ -148,7 +148,7 @@ function normalizar(sel: Selecionado): ImovelNormalizado | null {
 
 function corrigirDestinoStand(slug: string, url: string | null) {
   if (slug !== "saudosa-praca-onze-residencial" || !url) return url;
-  return url.replace("22.89721,-43.20472", "-22.89721,-43.20472");
+  return url.replace(/(?<![-\d])22\.89721,-43\.20472/, "-22.89721,-43.20472");
 }
 
 function main() {
