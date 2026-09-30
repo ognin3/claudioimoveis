@@ -6,16 +6,15 @@ import { z } from "zod";
 import { clienteEscrita } from "@/lib/sanity/client";
 import { queryControlesTaxaExpirados, queryImovelParaLead } from "@/lib/sanity/queries";
 import { enviarLeadMeta } from "@/lib/meta/capi";
-import { linkWhatsApp } from "@/lib/whatsapp";
 import { site } from "@/lib/site";
 import { limparAtribuicao, limparPagina } from "@/lib/meta/attribution";
+import { createLeadReceipt, LEAD_RECEIPT_COOKIE, LEAD_RECEIPT_MAX_AGE } from "@/lib/lead-receipt";
 
 export type EstadoLead = {
   sucesso?: boolean;
   mensagem?: string;
   erros?: Partial<Record<"nome" | "whatsapp" | "email" | "consentimento", string>>;
   eventId?: string;
-  whatsappUrl?: string;
   marketingAutorizado?: boolean;
 };
 
@@ -140,6 +139,14 @@ export async function cadastrarLead(
   _estado: EstadoLead,
   formData: FormData,
 ): Promise<EstadoLead> {
+  const cookieStore = await cookies();
+  cookieStore.set(LEAD_RECEIPT_COOKIE, "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/obrigado",
+    maxAge: 0,
+  });
   const cabecalhos = await headers();
   const ip =
     (
@@ -224,6 +231,13 @@ export async function cadastrarLead(
     console.error("Falha ao gravar lead no Sanity", erro);
     return { mensagem: "Não foi possível enviar agora. Tente novamente pelo WhatsApp." };
   }
+  cookieStore.set(LEAD_RECEIPT_COOKIE, createLeadReceipt(imovel ?? undefined), {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/obrigado",
+    maxAge: LEAD_RECEIPT_MAX_AGE,
+  });
 
   const tarefas: Promise<unknown>[] = [
     notificarLead({
@@ -235,7 +249,6 @@ export async function cadastrarLead(
     }),
   ];
   if (marketingAutorizado) {
-    const cookieStore = await cookies();
     tarefas.push(enviarLeadMeta({
       marketingAutorizado: true,
       eventId,
@@ -259,11 +272,6 @@ export async function cadastrarLead(
     sucesso: true,
     eventId,
     marketingAutorizado,
-    whatsappUrl: linkWhatsApp(
-      imovel
-        ? { tipo: "imovel", nome: imovel.nome, bairro: imovel.bairro }
-        : { tipo: "geral" },
-    ),
   };
 }
 

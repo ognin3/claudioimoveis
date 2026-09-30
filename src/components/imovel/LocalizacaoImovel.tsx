@@ -69,9 +69,11 @@ export function LocalizacaoImovel({
 
               {(local.waze || local.googleMaps) && (
                 <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 pl-12">
-                  {local.waze && <AtalhoMapa href={local.waze} rotulo="Waze" />}
+                  {local.waze && (
+                    <AtalhoMapa href={destinoMapa(local.waze, local.endereco, "waze")} rotulo="Waze" />
+                  )}
                   {local.googleMaps && (
-                    <AtalhoMapa href={local.googleMaps} rotulo="Google Maps" />
+                    <AtalhoMapa href={destinoMapa(local.googleMaps, local.endereco, "google")} rotulo="Google Maps" />
                   )}
                 </div>
               )}
@@ -101,6 +103,21 @@ export function LocalizacaoImovel({
       </div>
     </section>
   );
+}
+
+function destinoMapa(url: string, endereco: string, servico: "waze" | "google") {
+  const destino = new URL(url);
+  const parametro = servico === "waze" ? "ll" : "daddr";
+  // A fonte publicou a latitude positiva deste stand. Outros imóveis com o
+  // mesmo endereço confirmam -22.89721,-43.20472; não alterar o geoponto do prédio.
+  if (
+    endereco.startsWith("Via Binário do Porto, 778,") &&
+    destino.searchParams.get(parametro) === "22.89721,-43.20472"
+  ) {
+    destino.searchParams.set(parametro, "-22.89721,-43.20472");
+    return destino.toString();
+  }
+  return url;
 }
 
 function AtalhoMapa({ href, rotulo }: { href: string; rotulo: string }) {

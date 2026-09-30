@@ -109,7 +109,7 @@ export const queryRegioes = defineQuery(/* groq */ `
 `);
 
 export const queryRegiao = defineQuery(/* groq */ `
-  *[_type == "regiao" && slug.current == $slug][0] {
+  *[_type == "regiao" && slug.current == $slug && count(*[_type == "imovel" && publicado == true && regiao._ref == ^._id]) > 0][0] {
     "slug": slug.current,
     nome,
     zona,

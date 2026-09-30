@@ -112,8 +112,8 @@ function normalizar(sel: Selecionado): ImovelNormalizado | null {
     .map((l: { type: string; address: string; waze?: string; google_maps?: string }) => ({
       tipo: mapearTipoLocal(l.type ?? ""),
       endereco: l.address.trim(),
-      waze: l.waze?.trim() || null,
-      googleMaps: l.google_maps?.trim() || null,
+      waze: corrigirDestinoStand(slug, l.waze?.trim() || null),
+      googleMaps: corrigirDestinoStand(slug, l.google_maps?.trim() || null),
     }));
 
   const coord = bruto.coordinates?.[0];
@@ -144,6 +144,11 @@ function normalizar(sel: Selecionado): ImovelNormalizado | null {
     // DESCRICAO NAO E COPIADA: o texto da Cury geraria conteudo duplicado e
     // derrubaria o SEO. Fica vazio para ser reescrito no Studio. Ver CLAUDE.md 5.5.
   };
+}
+
+function corrigirDestinoStand(slug: string, url: string | null) {
+  if (slug !== "saudosa-praca-onze-residencial" || !url) return url;
+  return url.replace("22.89721,-43.20472", "-22.89721,-43.20472");
 }
 
 function main() {

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import type { Route } from "next";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, CheckCircle2, LoaderCircle } from "lucide-react";
@@ -45,13 +44,11 @@ export function LeadForm({ imovel, compacto = false, className }: LeadFormProps)
   }, []);
 
   useEffect(() => {
-    if (!estado.sucesso || !estado.eventId || !estado.whatsappUrl || redirecionou.current)
+    if (!estado.sucesso || !estado.eventId || redirecionou.current)
       return;
     redirecionou.current = true;
     if (estado.marketingAutorizado) dispararLeadMeta(estado.eventId, imovel?.nome);
-    const params = new URLSearchParams({ whatsapp: estado.whatsappUrl });
-    if (imovel?.nome) params.set("imovel", imovel.nome);
-    router.push(`/obrigado?${params.toString()}` as Route);
+    router.push("/obrigado");
   }, [estado, imovel?.nome, router]);
 
   return (
